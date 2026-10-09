@@ -4,7 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="theme-color" content="#0b1120">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="B4C BAC">
   <title>منصة B4C التعليمية</title>
+
+  <!-- PWA Manifest Inline -->
+  <link rel="manifest" href='data:application/manifest+json,{"name":"منصة B4C التعليمية","short_name":"B4C","start_url":".","display":"standalone","background_color":"#0b1120","theme_color":"#0b1120","icons":[{"src":"https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg","sizes":"512x512","type":"image/png"}]}'>
 
   <style>
     :root {
@@ -40,6 +47,9 @@
     .user-nav { display: flex; align-items: center; gap: 12px; }
     .user-avatar-header { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; cursor: pointer; }
 
+    /* الهيكل التفاعلي الرئيسي للحاسوب والهاتف */
+    .app-layout { display: flex; flex: 1; width: 100%; }
+
     /* محتوى الصفحات */
     main { flex: 1; padding: 20px 16px 80px 16px; max-width: 900px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; }
 
@@ -49,11 +59,45 @@
     .page-title { font-size: 1.3rem; font-weight: bold; color: var(--text); }
     .page-desc { font-size: 0.88rem; color: var(--muted); margin-top: -10px; margin-bottom: 10px; }
 
-    /* شريط الملاحة السفلي (Bottom Navigation) */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--muted); background: none; border: none; font-size: 0.75rem; font-weight: bold; cursor: pointer; flex: 1; }
+    /* شريط التنقل المتجاوب (هاتف سفلي - حاسوب جانبي أيمن) */
+    .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 62px; background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); background: none; border: none; cursor: pointer; flex: 1; padding: 6px 0; }
     .nav-item.active { color: var(--accent); }
-    .nav-item .icon { font-size: 1.3rem; }
+    .nav-item .icon { font-size: 1.6rem; }
+    .nav-item .label { display: none; font-size: 0.78rem; font-weight: bold; margin-top: 3px; }
+
+    /* تعديل التصميم للحواسيب والشاشات الكبيرة */
+    @media (min-width: 850px) {
+      .app-layout { flex-direction: row-reverse; }
+      .nav-bar {
+        position: sticky;
+        top: 61px;
+        right: 0;
+        bottom: auto;
+        left: auto;
+        width: 220px;
+        height: calc(100vh - 61px);
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 12px;
+        padding: 24px 12px;
+        border-top: none;
+        border-left: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .nav-item {
+        flex-direction: row;
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        justify-content: flex-start;
+        gap: 12px;
+        flex: none;
+      }
+      .nav-item:hover, .nav-item.active { background: var(--surface2); }
+      .nav-item .label { display: inline-block; }
+      main { padding-bottom: 30px; }
+    }
 
     /* شبكة المواد */
     .subjects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
@@ -128,204 +172,204 @@
       </div>
     </header>
 
-    <main>
-      <!-- 1. صفحة المواد الدراسية -->
-      <section id="subjectsPage" class="page active">
-        <div class="page-title">📚 المواد الدراسية</div>
-        <div class="page-desc">تصفح منشورات وملخصات المواد المقررة للبكالوريا.</div>
+    <div class="app-layout">
+      <!-- شريط الملاحة المتجاور (جانبي في للحاسوب / سفلي بدون نصوص للهاتف) -->
+      <nav class="nav-bar">
+        <button class="nav-item active" onclick="navigateTo('subjectsPage')">
+          <span class="icon">📚</span>
+          <span class="label">المواد الدراسية</span>
+        </button>
 
-        <div class="subjects-grid">
-          <div class="subject-card" onclick="openSubjectView('philo', 'الفلسفة')">
-            <div>
-              <h3>🧠 الفلسفة</h3>
-              <p>المقالات الجدلية والاستقصاء</p>
+        <button class="nav-item" onclick="navigateTo('searchPage')">
+          <span class="icon">🔍</span>
+          <span class="label">البحث والدروس</span>
+        </button>
+
+        <button class="nav-item" onclick="navigateTo('chatPage')">
+          <span class="icon">💬</span>
+          <span class="label">الدردشة العامة</span>
+        </button>
+
+        <button class="nav-item" onclick="navigateTo('createPostPage')">
+          <span class="icon">➕</span>
+          <span class="label">إضافة ملخص</span>
+        </button>
+
+        <button class="nav-item" onclick="openMyProfile()">
+          <span class="icon">👤</span>
+          <span class="label">حسابي الشخصي</span>
+        </button>
+      </nav>
+
+      <main>
+        <!-- 1. صفحة المواد الدراسية -->
+        <section id="subjectsPage" class="page active">
+          <div class="page-title">📚 المواد الدراسية</div>
+          <div class="page-desc">تصفح منشورات وملخصات المواد المقررة للبكالوريا.</div>
+
+          <div class="subjects-grid">
+            <div class="subject-card" onclick="openSubjectView('philo', 'الفلسفة')">
+              <div>
+                <h3>🧠 الفلسفة</h3>
+                <p>المقالات الجدلية والاستقصاء</p>
+              </div>
+              <span class="subject-tag">معامل 6</span>
             </div>
-            <span class="subject-tag">معامل 6</span>
-          </div>
 
-          <div class="subject-card" onclick="openSubjectView('arabic', 'اللغة العربية')">
-            <div>
-              <h3>📚 اللغة العربية</h3>
-              <p>القواعد والبلاغة والتقويم النقدي</p>
+            <div class="subject-card" onclick="openSubjectView('arabic', 'اللغة العربية')">
+              <div>
+                <h3>📚 اللغة العربية</h3>
+                <p>القواعد والبلاغة والتقويم النقدي</p>
+              </div>
+              <span class="subject-tag">معامل 5</span>
             </div>
-            <span class="subject-tag">معامل 5</span>
-          </div>
 
-          <div class="subject-card" onclick="openSubjectView('history', 'التاريخ والجغرافيا')">
-            <div>
-              <h3>🌍 التاريخ والجغرافيا</h3>
-              <p>المصطلحات الشخصيات والخرائط</p>
+            <div class="subject-card" onclick="openSubjectView('history', 'التاريخ والجغرافيا')">
+              <div>
+                <h3>🌍 التاريخ والجغرافيا</h3>
+                <p>المصطلحات الشخصيات والخرائط</p>
+              </div>
+              <span class="subject-tag">معامل 4</span>
             </div>
-            <span class="subject-tag">معامل 4</span>
-          </div>
 
-          <div class="subject-card" onclick="openSubjectView('islamic', 'العلوم الإسلامية')">
-            <div>
-              <h3>العلوم الإسلامية</h3>
-              <p>الآيات، الأحكام والفوائد</p>
+            <div class="subject-card" onclick="openSubjectView('islamic', 'العلوم الإسلامية')">
+              <div>
+                <h3>العلوم الإسلامية</h3>
+                <p>الآيات، الأحكام والفوائد</p>
+              </div>
+              <span class="subject-tag">معامل 2</span>
             </div>
-            <span class="subject-tag">معامل 2</span>
-          </div>
 
-          <div class="subject-card" onclick="openSubjectView('french', 'اللغة الفرنسية')">
-            <div>
-              <h3>🇫🇷 اللغة الفرنسية</h3>
-              <p>النصوص والملخصات المقررة</p>
+            <div class="subject-card" onclick="openSubjectView('french', 'اللغة الفرنسية')">
+              <div>
+                <h3>🇫🇷 اللغة الفرنسية</h3>
+                <p>النصوص والملخصات المقررة</p>
+              </div>
+              <span class="subject-tag">معامل 3</span>
             </div>
-            <span class="subject-tag">معامل 3</span>
-          </div>
 
-          <div class="subject-card" onclick="openSubjectView('english', 'اللغة الإنجليزية')">
-            <div>
-              <h3>🇬🇧 اللغة الإنجليزية</h3>
-              <p>القواعد والدروس المقررة</p>
+            <div class="subject-card" onclick="openSubjectView('english', 'اللغة الإنجليزية')">
+              <div>
+                <h3>🇬🇧 اللغة الإنجليزية</h3>
+                <p>القواعد والدروس المقررة</p>
+              </div>
+              <span class="subject-tag">معامل 3</span>
             </div>
-            <span class="subject-tag">معامل 3</span>
-          </div>
 
-          <div class="subject-card" onclick="openSubjectView('math', 'الرياضيات')">
-            <div>
-              <h3>📐 الرياضيات</h3>
-              <p>الدوال المتتاليات والاحتمالات</p>
+            <div class="subject-card" onclick="openSubjectView('math', 'الرياضيات')">
+              <div>
+                <h3>📐 الرياضيات</h3>
+                <p>الدوال المتتاليات والاحتمالات</p>
+              </div>
+              <span class="subject-tag">معامل 2</span>
             </div>
-            <span class="subject-tag">معامل 2</span>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- صفحة منشورات مادة محددة -->
-      <section id="subjectPostsPage" class="page">
-        <button class="back-btn" onclick="navigateTo('subjectsPage')">← العودة للمواد</button>
-        <div class="page-title" id="currentSubjectTitle">منشورات المادة</div>
-        <div class="posts-list" id="subjectPostsContainer"></div>
-      </section>
+        <!-- صفحة منشورات مادة محددة -->
+        <section id="subjectPostsPage" class="page">
+          <button class="back-btn" onclick="navigateTo('subjectsPage')">← العودة للمواد</button>
+          <div class="page-title" id="currentSubjectTitle">منشورات المادة</div>
+          <div class="posts-list" id="subjectPostsContainer"></div>
+        </section>
 
-      <!-- 2. صفحة البحث الشامل -->
-      <section id="searchPage" class="page">
-        <div class="page-title">🔍 البحث في المنشورات والدروس</div>
-        <div class="page-desc">ابحث في كافة الدروس والملخصات لجميع المواد.</div>
-
-        <div class="form-group">
-          <input type="text" id="globalSearchInput" class="form-control selectable" placeholder="ابحث باسم الدرس، المقالة، أو الكلمة المفتاحية..." oninput="executeGlobalSearch()">
-        </div>
-
-        <div class="posts-list" id="searchResultsContainer" style="margin-top:10px;"></div>
-      </section>
-
-      <!-- 3. صفحة الدردشة العامة -->
-      <section id="chatPage" class="page">
-        <div class="page-title">💬 الدردشة العامة</div>
-        <div class="chat-container">
-          <div class="chat-messages" id="chatMessages"></div>
-          <div class="chat-bar">
-            <input type="text" id="userInput" class="selectable" placeholder="اكتب رسالتك هنا...">
-            <button id="sendBtn">إرسال</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 4. صفحة النشر الجديدة -->
-      <section id="createPostPage" class="page">
-        <div class="page-title">➕ إضافة منشور أو ملخص</div>
-        <div class="page-desc">شارِك زملائك ملخصاً، درساً، أو فائدة دراسية.</div>
-
-        <form id="postForm" style="display:flex; flex-direction:column; gap:14px;">
-          <div class="form-group">
-            <label>المادة الدراسية:</label>
-            <select id="postSubjectSelect" class="form-control" required>
-              <option value="philo">الفلسفة</option>
-              <option value="arabic">اللغة العربية</option>
-              <option value="history">التاريخ والجغرافيا</option>
-              <option value="islamic">العلوم الإسلامية</option>
-              <option value="french">اللغة الفرنسية</option>
-              <option value="english">اللغة الإنجليزية</option>
-              <option value="math">الرياضيات</option>
-            </select>
-          </div>
+        <!-- 2. صفحة البحث الشامل -->
+        <section id="searchPage" class="page">
+          <div class="page-title">🔍 البحث في المنشورات والدروس</div>
+          <div class="page-desc">ابحث في كافة الدروس والملخصات لجميع المواد.</div>
 
           <div class="form-group">
-            <label>عنوان الدرس أو الملخص:</label>
-            <input type="text" id="postTitleInput" class="form-control selectable" placeholder="مثال: مقالة الشعور واللاشعور" required>
+            <input type="text" id="globalSearchInput" class="form-control selectable" placeholder="ابحث باسم الدرس، المقالة، أو الكلمة المفتاحية..." oninput="executeGlobalSearch()">
           </div>
 
-          <div class="form-group">
-            <label>محتوى الدرس / النص:</label>
-            <textarea id="postContentInput" class="form-control selectable" placeholder="اكتب التفاصيل أو الشرح هنا..." required></textarea>
+          <div class="posts-list" id="searchResultsContainer" style="margin-top:10px;"></div>
+        </section>
+
+        <!-- 3. صفحة الدردشة العامة -->
+        <section id="chatPage" class="page">
+          <div class="page-title">💬 الدردشة العامة</div>
+          <div class="chat-container">
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-bar">
+              <input type="text" id="userInput" class="selectable" placeholder="اكتب رسالتك هنا...">
+              <button id="sendBtn">إرسال</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. صفحة النشر الجديدة -->
+        <section id="createPostPage" class="page">
+          <div class="page-title">➕ إضافة منشور أو ملخص</div>
+          <div class="page-desc">شارِك زملائك ملخصاً، درساً، أو فائدة دراسية.</div>
+
+          <form id="postForm" style="display:flex; flex-direction:column; gap:14px;">
+            <div class="form-group">
+              <label>المادة الدراسية:</label>
+              <select id="postSubjectSelect" class="form-control" required>
+                <option value="philo">الفلسفة</option>
+                <option value="arabic">اللغة العربية</option>
+                <option value="history">التاريخ والجغرافيا</option>
+                <option value="islamic">العلوم الإسلامية</option>
+                <option value="french">اللغة الفرنسية</option>
+                <option value="english">اللغة الإنجليزية</option>
+                <option value="math">الرياضيات</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>عنوان الدرس أو الملخص:</label>
+              <input type="text" id="postTitleInput" class="form-control selectable" placeholder="مثال: مقالة الشعور واللاشعور" required>
+            </div>
+
+            <div class="form-group">
+              <label>محتوى الدرس / النص:</label>
+              <textarea id="postContentInput" class="form-control selectable" placeholder="اكتب التفاصيل أو الشرح هنا..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>رابط صورة مرفقة (اختياري):</label>
+              <input type="url" id="postImgInput" class="form-control selectable" placeholder="https://example.com/image.jpg">
+            </div>
+
+            <div class="form-group">
+              <label>رابط خارجي للملف / PDF (اختياري):</label>
+              <input type="url" id="postLinkInput" class="form-control selectable" placeholder="https://drive.google.com/...">
+            </div>
+
+            <button type="submit" class="btn-submit">نشر في المنصة 🚀</button>
+          </form>
+        </section>
+
+        <!-- 5. صفحة البروفايل والملف الشخصي -->
+        <section id="profilePage" class="page">
+          <button class="back-btn" onclick="navigateTo('subjectsPage')">← العودة</button>
+          <div class="profile-card">
+            <img id="profileAvatarImg" class="profile-img-large" src="" alt="الصورة الشخصية">
+            <h2 id="profileNameText">اسم الطالب</h2>
+            <button class="btn-logout" id="logoutBtn" style="display:none;">تسجيل الخروج</button>
           </div>
 
-          <div class="form-group">
-            <label>رابط صورة مرفقة (اختياري):</label>
-            <input type="url" id="postImgInput" class="form-control selectable" placeholder="https://example.com/image.jpg">
+          <div id="editProfileSection" style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-top:14px; display:none;">
+            <h4 style="margin-bottom:12px; color:var(--accent);">⚙️ تعديل اسم الحساب:</h4>
+            <div class="form-group" style="margin-bottom:14px;">
+              <label>الاسم الجديد:</label>
+              <input type="text" id="editNameInput" class="form-control selectable">
+            </div>
+            <button id="saveProfileBtn" class="btn-submit" style="width:100%;">حفظ التعديلات</button>
           </div>
 
-          <div class="form-group">
-            <label>رابط خارجي للملف / PDF (اختياري):</label>
-            <input type="url" id="postLinkInput" class="form-control selectable" placeholder="https://drive.google.com/...">
-          </div>
-
-          <button type="submit" class="btn-submit">نشر في المنصة 🚀</button>
-        </form>
-      </section>
-
-      <!-- 5. صفحة البروفايل والملف الشخصي -->
-      <section id="profilePage" class="page">
-        <button class="back-btn" onclick="navigateTo('subjectsPage')">← العودة</button>
-        <div class="profile-card">
-          <img id="profileAvatarImg" class="profile-img-large" src="" alt="الصورة الشخصية">
-          <h2 id="profileNameText">اسم الطالب</h2>
-          <!-- زر تسجيل الخروج يظهر فقط إذا كنت تصفح حسابك الخاص -->
-          <button class="btn-logout" id="logoutBtn" style="display:none;">تسجيل الخروج</button>
-        </div>
-
-        <!-- صندوق تعديل الاسم يظهر فقط في حسابك الخاص -->
-        <div id="editProfileSection" style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-top:14px; display:none;">
-          <h4 style="margin-bottom:12px; color:var(--accent);">⚙️ تعديل اسم الحساب:</h4>
-          <div class="form-group" style="margin-bottom:14px;">
-            <label>الاسم الجديد:</label>
-            <input type="text" id="editNameInput" class="form-control selectable">
-          </div>
-          <button id="saveProfileBtn" class="btn-submit" style="width:100%;">حفظ التعديلات</button>
-        </div>
-
-        <h3 style="margin-top:20px; font-size:1.1rem; color:var(--text);" id="userPostsHeading">📝 المنشورات والملخصات المشاركة:</h3>
-        <div class="posts-list" id="userPostsContainer" style="margin-top:10px;"></div>
-      </section>
-    </main>
-
-    <!-- شريط التنقل السفلي -->
-    <nav class="bottom-nav">
-      <button class="nav-item active" onclick="navigateTo('subjectsPage')">
-        <span class="icon">📚</span>
-        <span>المواد</span>
-      </button>
-
-      <button class="nav-item" onclick="navigateTo('searchPage')">
-        <span class="icon">🔍</span>
-        <span>البحث</span>
-      </button>
-
-      <button class="nav-item" onclick="navigateTo('chatPage')">
-        <span class="icon">💬</span>
-        <span>الدردشة</span>
-      </button>
-
-      <button class="nav-item" onclick="navigateTo('createPostPage')">
-        <span class="icon">➕</span>
-        <span>نشر</span>
-      </button>
-
-      <button class="nav-item" onclick="openMyProfile()">
-        <span class="icon">👤</span>
-        <span>حسابي</span>
-      </button>
-    </nav>
+          <h3 style="margin-top:20px; font-size:1.1rem; color:var(--text);" id="userPostsHeading">📝 المنشورات والملخصات المشاركة:</h3>
+          <div class="posts-list" id="userPostsContainer" style="margin-top:10px;"></div>
+        </section>
+      </main>
+    </div>
   </div>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDK & App Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-    import { getDatabase, ref, push, set, update, onValue, off, onDisconnect } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+    import { getDatabase, ref, push, set, update, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCi8tBwbrQ2N3HPK266BnyLBbNIBZ1ggsg",
@@ -346,10 +390,15 @@
     const $ = (id) => document.getElementById(id);
 
     let currentUser = null;
-    let usersDataCache = {}; // كاش لحفظ أسماء وصور الحسابات المحدثة حياً
+    let usersDataCache = {};
+    let pageHistory = ['subjectsPage'];
 
-    // التنقل بين الصفحات
-    window.navigateTo = function(pageId) {
+    // إدارة التنقل وزر العودة (Back Button Support)
+    window.navigateTo = function(pageId, pushState = true) {
+      if (pushState) {
+        history.pushState({ page: pageId }, "", "#" + pageId);
+      }
+      
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       $(pageId).classList.add('active');
@@ -360,6 +409,14 @@
       if (pageId === 'createPostPage') document.querySelectorAll('.nav-item')[3].classList.add('active');
       if (pageId === 'profilePage') document.querySelectorAll('.nav-item')[4].classList.add('active');
     };
+
+    window.addEventListener('popstate', (e) => {
+      if (e.state && e.state.page) {
+        navigateTo(e.state.page, false);
+      } else {
+        navigateTo('subjectsPage', false);
+      }
+    });
 
     // تسجيل الدخول
     $("googleLoginBtn").addEventListener("click", async () => {
@@ -379,12 +436,13 @@
         $("appArea").style.display = "flex";
         
         $("headerUserAvatar").src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
-        
-        // حفظ/تحديث سجل الحساب المباشر في قاعدة البيانات
+
         syncUserData(user.uid, user.displayName, user.photoURL);
         setupPresence(user.uid);
         listenGlobalChat();
         listenAllUsers();
+
+        history.replaceState({ page: 'subjectsPage' }, "", "#subjectsPage");
       } else {
         currentUser = null;
         $("authScreen").style.display = "grid";
@@ -399,7 +457,6 @@
       });
     }
 
-    // الاستماع الحياتي لكافة المستخدمين لتحديث أسمائهم وصورهم تلقائياً عبر كل المنشورات والشات
     function listenAllUsers() {
       onValue(ref(db, 'users'), (snap) => {
         usersDataCache = snap.val() || {};
@@ -416,7 +473,6 @@
       });
     }
 
-    // فتح منشورات مادة معينة
     window.openSubjectView = function(key, title) {
       $("currentSubjectTitle").innerText = "منشورات مادة " + title;
       navigateTo('subjectPostsPage');
@@ -435,7 +491,6 @@
       });
     };
 
-    // البحث الشامل في كافة المواد والمنشورات
     window.executeGlobalSearch = function() {
       const queryText = $("globalSearchInput").value.trim().toLowerCase();
       const container = $("searchResultsContainer");
@@ -462,12 +517,10 @@
       }, { onlyOnce: true });
     };
 
-    // إنشاء بطاقة منشور ديناميكية تربط دائماً بأحدث اسم وصورة من البروفايل
     function createPostCard(post) {
       const card = document.createElement('div');
       card.className = 'post-card';
       
-      // جلب الاسم والصورة الحالية فوراً من الكاش أو الاستعانة بالافتراضي
       const liveUser = usersDataCache[post.uid] || {};
       const authorName = liveUser.name || post.authorName || 'طالب';
       const authorPhoto = liveUser.photo || post.authorPhoto || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg';
@@ -488,7 +541,6 @@
       return card;
     }
 
-    // إضافة منشور جديد
     $("postForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!currentUser) return;
@@ -511,14 +563,13 @@
 
       await push(ref(db, `posts/${subject}`), postData);
       await push(ref(db, `user_posts/${currentUser.uid}`), postData);
-      await push(ref(db, `all_posts`), postData); // للبحث الشامل السريع
+      await push(ref(db, `all_posts`), postData);
 
       alert("تم نشر ملخصك بنجاح!");
       $("postForm").reset();
       navigateTo('subjectsPage');
     });
 
-    // الدردشة العامة
     function listenGlobalChat() {
       onValue(ref(db, 'global_chat'), (snap) => {
         const chatBox = $("chatMessages");
@@ -565,18 +616,15 @@
       }
     }
 
-    // فتح حسابي الشخصي المباشر
     window.openMyProfile = function() {
       if (!currentUser) return;
       openUserProfile(currentUser.uid);
     };
 
-    // فتح صفحة البروفايل لأي طالب بناءً على UID فقط
     window.openUserProfile = function(targetUid) {
       if (!targetUid) return;
       const isMyProfile = currentUser && currentUser.uid === targetUid;
       
-      // جلب اسم وصورة الطالب المحدثة فوراً
       onValue(ref(db, `users/${targetUid}`), (snap) => {
         const userData = snap.val() || {};
         const displayName = userData.name || "طالب";
@@ -599,7 +647,6 @@
         navigateTo('profilePage');
       }, { onlyOnce: true });
 
-      // جلب منشورات هذا الطالب بالتحديد
       onValue(ref(db, `user_posts/${targetUid}`), (snap) => {
         const container = $("userPostsContainer");
         container.innerHTML = '';
@@ -614,7 +661,6 @@
       });
     };
 
-    // حفظ تعديل الاسم وتأثيث التحديث فوراً في كل الأماكن
     $("saveProfileBtn").addEventListener("click", async () => {
       if (!currentUser) return;
       const newName = $("editNameInput").value.trim();
@@ -626,16 +672,27 @@
 
       try {
         await updateProfile(currentUser, { displayName: newName });
-        
-        // تحديث جدول الحسابات الفوري في السحابة
         await update(ref(db, `users/${currentUser.uid}`), { name: newName });
 
-        alert("تم تحديث اسمك بنجاح! سيظهر اسمك الجديد فوراً على كافة منشوراتك والدردشة.");
+        alert("تم تحديث اسمك بنجاح!");
         openMyProfile();
       } catch (e) {
         alert("خطأ في تحديث الاسم: " + e.message);
       }
     });
+
+    // تسجيل Service Worker لخدمة PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        const swCode = `
+          self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));
+          self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+        `;
+        const blob = new Blob([swCode], { type: 'text/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+      });
+    }
   </script>
 </body>
 </html>
