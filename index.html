@@ -5,57 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة الآداب والفلسفة - B4C</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0b0f19; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --card-sub: #1f2937;
+            --text-color: #f8fafc;
+            --text-sub: #9ca3af;
+            --border-color: #1f2937;
+            --accent-color: #38bdf8;
+        }
+
+        .light-theme {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --card-sub: #f1f5f9;
+            --text-color: #0f172a;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+            --accent-color: #0284c7;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background 0.3s, color 0.3s; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; }
 
         /* الهيدر العلوي */
-        header { background: #111827; border-bottom: 1px solid #1f2937; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.3rem; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .user-profile { background: #1f2937; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; border: 1px solid #374151; display: flex; align-items: center; gap: 8px; }
-        .user-profile input { background: transparent; border: none; color: #38bdf8; font-weight: bold; outline: none; width: 100px; }
+        header { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.3rem; font-weight: 800; color: var(--accent-color); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .header-controls { display: flex; align-items: center; gap: 12px; }
+        .online-count { background: rgba(34, 197, 94, 0.1); color: #22c55e; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; border: 1px solid rgba(34, 197, 94, 0.2); }
+        .theme-btn { background: var(--card-sub); border: 1px solid var(--border-color); color: var(--text-color); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+        
+        .user-profile { background: var(--card-sub); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px; }
+        .user-profile input { background: transparent; border: none; color: var(--accent-color); font-weight: bold; outline: none; width: 90px; }
 
         /* الحاوية الرئيسية */
         .container { max-width: 1200px; margin: 0 auto; width: 90%; padding: 25px 0; flex: 1; }
 
-        /* 1. شبكة المواد (الصفحة الرئيسية) */
+        /* 1. الرئيسية: شبكة المواد */
         .subjects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 20px; }
-        .subject-card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 24px; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden; }
-        .subject-card:hover { transform: translateY(-5px); border-color: #38bdf8; box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.1); }
+        .subject-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; gap: 12px; position: relative; }
+        .subject-card:hover { transform: translateY(-5px); border-color: var(--accent-color); box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.1); }
         .subject-card .icon { font-size: 2.5rem; }
-        .subject-card h3 { font-size: 1.2rem; color: #f8fafc; }
-        .subject-card p { font-size: 0.88rem; color: #9ca3af; line-height: 1.5; }
-        .subject-card .badge { align-self: flex-start; background: rgba(56, 189, 248, 0.1); color: #38bdf8; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+        .subject-card h3 { font-size: 1.2rem; color: var(--text-color); }
+        .subject-card p { font-size: 0.88rem; color: var(--text-sub); line-height: 1.5; }
+        .subject-card .badge { align-self: flex-start; background: rgba(56, 189, 248, 0.1); color: var(--accent-color); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
 
-        /* 2. واجهة المادة التعليمية (تظهر عند اختيار المادة) */
+        /* 2. صفحة المادة التعليمية */
         .subject-page { display: none; flex-direction: column; gap: 20px; }
-        .back-btn { align-self: flex-start; background: #1f2937; color: #38bdf8; border: 1px solid #374151; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
+        .back-btn { align-self: flex-start; background: var(--card-sub); color: var(--accent-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
         
+        /* شريط البحث عن الدروس */
+        .search-box { width: 100%; padding: 12px 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-color); outline: none; font-size: 0.9rem; }
+        .search-box:focus { border-color: var(--accent-color); }
+
         .subject-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
 
-        /* قسم الدروس الأساسي */
-        .materials-section { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 20px; }
-        .materials-section h2 { color: #38bdf8; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid #1f2937; padding-bottom: 10px; }
+        /* قسم الدروس */
+        .materials-section { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; }
+        .materials-section h2 { color: var(--accent-color); margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
         
-        .lesson-item { background: #1f2937; border-radius: 10px; padding: 16px; margin-bottom: 12px; border-right: 4px solid #38bdf8; }
-        .lesson-item h4 { font-size: 1rem; color: #f3f4f6; margin-bottom: 6px; }
-        .lesson-item p { font-size: 0.88rem; color: #9ca3af; line-height: 1.5; }
+        .lesson-item { background: var(--card-sub); border-radius: 10px; padding: 16px; margin-bottom: 12px; border-right: 4px solid var(--accent-color); display: flex; flex-direction: column; gap: 8px; }
+        .lesson-item h4 { font-size: 1rem; color: var(--text-color); }
+        .lesson-item p { font-size: 0.88rem; color: var(--text-sub); line-height: 1.5; }
+        .pdf-download-btn { align-self: flex-start; background: #2563eb; color: #fff; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: bold; margin-top: 4px; display: inline-block; }
 
-        /* قسم الدردشة الفرعي المصغر */
-        .chat-subpanel { background: #111827; border: 1px solid #1f2937; border-radius: 16px; display: flex; flex-direction: column; height: 500px; }
-        .chat-header { padding: 12px 16px; background: #1f2937; border-top-left-radius: 16px; border-top-right-radius: 16px; font-size: 0.9rem; font-weight: bold; color: #38bdf8; }
+        /* الشات الفرعي */
+        .chat-subpanel { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; display: flex; flex-direction: column; height: 500px; }
+        .chat-header { padding: 12px 16px; background: var(--card-sub); border-top-left-radius: 16px; border-top-right-radius: 16px; font-size: 0.9rem; font-weight: bold; color: var(--accent-color); display: flex; justify-content: space-between; }
         .chat-messages { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
         
         .msg-box { max-width: 85%; padding: 8px 12px; border-radius: 10px; font-size: 0.82rem; word-break: break-word; }
-        .msg-other { background: #1f2937; color: #f3f4f6; align-self: flex-start; }
+        .msg-other { background: var(--card-sub); color: var(--text-color); align-self: flex-start; }
         .msg-me { background: #2563eb; color: #fff; align-self: flex-end; }
-        .msg-sender { font-size: 0.7rem; font-weight: bold; color: #38bdf8; display: block; margin-bottom: 2px; }
+        .msg-sender { font-size: 0.7rem; font-weight: bold; color: var(--accent-color); display: block; margin-bottom: 2px; }
         .msg-me .msg-sender { color: #bfdbfe; }
 
-        .chat-input { padding: 10px; border-top: 1px solid #1f2937; display: flex; gap: 6px; }
-        .chat-input input { flex: 1; padding: 8px 12px; background: #1f2937; border: 1px solid #374151; color: #fff; border-radius: 6px; outline: none; font-size: 0.85rem; }
+        .chat-input { padding: 10px; border-top: 1px solid var(--border-color); display: flex; gap: 6px; }
+        .chat-input input { flex: 1; padding: 8px 12px; background: var(--card-sub); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 6px; outline: none; font-size: 0.85rem; }
         .chat-input button { background: #2563eb; color: #fff; border: none; padding: 0 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
 
-        /* للهواتف المحمولة */
         @media (max-width: 850px) {
             .subject-layout { grid-template-columns: 1fr; }
             .chat-subpanel { height: 350px; }
@@ -66,21 +94,24 @@
 
     <header>
         <div class="logo" onclick="showHomePage()">📜 B4C آداب وفلسفة</div>
-        <div class="user-profile">
-            <span>👤</span>
-            <input type="text" id="usernameInput" placeholder="اسم الطالب">
+        <div class="header-controls">
+            <span class="online-count">🟢 <span id="onlineCounter">1</span> متصل</span>
+            <button class="theme-btn" onclick="toggleTheme()">☀️ / 🌙</button>
+            <div class="user-profile">
+                <span>👤</span>
+                <input type="text" id="usernameInput" placeholder="اسم الطالب">
+            </div>
         </div>
     </header>
 
     <div class="container">
         
-        <!-- 1. الرئيسية: بطاقات المواد الأساسية -->
+        <!-- 1. الرئيسية: المواد -->
         <div id="homePage">
             <h2 style="font-size: 1.3rem; margin-bottom: 8px;">المواد المقررة للبكالوريا</h2>
-            <p style="color: #9ca3af; font-size: 0.9rem; margin-bottom: 20px;">اختر المادة لتصفح الدروس، المقالات والمناقشة الخاصة بها.</p>
+            <p style="color: var(--text-sub); font-size: 0.9rem; margin-bottom: 20px;">اختر المادة لتصفح الدروس، المقالات والمناقشة الخاصة بها.</p>
 
             <div class="subjects-grid">
-                <!-- المادة 1: الفلسفة -->
                 <div class="subject-card" onclick="openSubject('philo', 'علم الفلسفة والمقالات', '🧠')">
                     <span class="badge">المادة الأساسية (معامل 6)</span>
                     <div class="icon">🧠</div>
@@ -88,7 +119,6 @@
                     <p>جميع المقالات الجدلية، الاستقصاء بالوضع، والمخططات المبسطة للمراجعة.</p>
                 </div>
 
-                <!-- المادة 2: الأدب العربي -->
                 <div class="subject-card" onclick="openSubject('arabic', 'الأدب العربي واللغات', '📚')">
                     <span class="badge">معامل 5</span>
                     <div class="icon">📚</div>
@@ -96,7 +126,6 @@
                     <p>تلخيص القواعد، إعراب الجمل والأحكام، والبلاغة المقررة شعبة آداب.</p>
                 </div>
 
-                <!-- المادة 3: التاريخ والجغرافيا -->
                 <div class="subject-card" onclick="openSubject('history', 'التاريخ والجغرافيا', '🌍')">
                     <span class="badge">معامل 4</span>
                     <div class="icon">🌍</div>
@@ -104,7 +133,6 @@
                     <p>مصطلحات، شخصيات، تواريخ أساسية وملخصات الوحدات التعليمية.</p>
                 </div>
 
-                <!-- قسم الدردشة العامة الفرعية -->
                 <div class="subject-card" onclick="openSubject('general', 'الدردشة العامة للطلاب', '💬')">
                     <span class="badge">فضاء التعارف</span>
                     <div class="icon">💬</div>
@@ -114,24 +142,29 @@
             </div>
         </div>
 
-        <!-- 2. صفحة المادة (تظهر بعد النقرة) -->
+        <!-- 2. صفحة المادة -->
         <div id="subjectPage" class="subject-page">
             <button class="back-btn" onclick="showHomePage()">➡️ العودة للمواد</button>
-            <h2 id="subjectTitle" style="color: #38bdf8;">اسم المادة</h2>
+            <h2 id="subjectTitle" style="color: var(--accent-color);">اسم المادة</h2>
+
+            <!-- البحث عن الدروس -->
+            <input type="text" id="lessonSearch" class="search-box" placeholder="🔍 ابحث عن درس أو مقالة في هذه المادة..." oninput="filterLessons()">
 
             <div class="subject-layout">
-                <!-- قسم محتوى المادة (الدروس) -->
+                <!-- قسم محتوى المادة -->
                 <div class="materials-section">
                     <h2>📚 الدروس والملخصات الجاهزة</h2>
                     <div id="materialsContent"></div>
                 </div>
 
-                <!-- قسم الدردشة الفرعي الجانبي -->
+                <!-- قسم الدردشة الفرعي -->
                 <div class="chat-subpanel">
-                    <div class="chat-header">💬 مناقشة المادة مباشرة</div>
+                    <div class="chat-header">
+                        <span>💬 مناقشة المادة مباشرة</span>
+                    </div>
                     <div class="chat-messages" id="chatMessages"></div>
                     <div class="chat-input">
-                        <input type="text" id="userInput" placeholder="اسأل أو ناقش نقطة...">
+                        <input type="text" id="userInput" placeholder="اسأل أو شارك رابط ملخص...">
                         <button id="sendBtn">إرسال</button>
                     </div>
                 </div>
@@ -143,7 +176,7 @@
     <!-- Firebase SDK -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-      import { getDatabase, ref, push, onValue, off } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+      import { getDatabase, ref, push, onValue, off, onDisconnect, set } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyCi8tBwbrQ2N3HPK266BnyLBbNIBZ1ggsg",
@@ -170,50 +203,46 @@
       let currentRef = null;
       const myClientId = 'user_' + Math.random().toString(36).substr(2, 9);
 
+      // العداد الحي للمتصلين
+      const presenceRef = ref(db, 'presence/' + myClientId);
+      set(presenceRef, true);
+      onDisconnect(presenceRef).remove();
+
+      onValue(ref(db, 'presence'), (snap) => {
+          const count = snap.val() ? Object.keys(snap.val()).length : 1;
+          document.getElementById('onlineCounter').innerText = count;
+      });
+
       usernameInput.value = localStorage.getItem('bac_user_name') || 'طالب';
       usernameInput.addEventListener('input', () => {
           localStorage.setItem('bac_user_name', usernameInput.value.trim());
       });
 
-      // قاعدة بيانات المواد والدروس
-      const materialsData = {
-          philo: `
-            <div class="lesson-card lesson-item">
-                <h4>1. مقالة الشعور واللاشعور (جدلية)</h4>
-                <p><b>الموقف الأول:</b> المدرسة الكلاسيكية (ديكارت) تسترشد بأن كل ما هو نفسي هو شعوري.<br><b>الموقف الثاني:</b> مدرسة التحليل النفسي (فرويد) اللاشعور هو أساس السلوك.</p>
-            </div>
-            <div class="lesson-card lesson-item">
-                <h4>2. مقالة الرياضيات بين العقل والتجربة</h4>
-                <p>مراجعة شاملة لنشأة المفاهيم الرياضية وطبيعة البرهان الرياضي.</p>
-            </div>
-          `,
-          arabic: `
-            <div class="lesson-card lesson-item">
-                <h4>1. القواعد: الأحكام النحوية لـ (إذْ، إذًا، إذن)</h4>
-                <p>شرح الفرق بين إذ الظرفية، التعليلية، والفجائية مع مواضع الإعراب.</p>
-            </div>
-            <div class="lesson-card lesson-item">
-                <h4>2. البلاغة: المجاز المرسل وعلاقاته</h4>
-                <p>كيفية التعرف على العلاقات (الجزئية، الكلية، السببية والمسببية).</p>
-            </div>
-          `,
-          history: `
-            <div class="lesson-card lesson-item">
-                <h4>1. تاريخ: بروز الصراع وتشكل العالم</h4>
-                <p>معايير تشكل العالم السياسية، الاقتصادية، والعسكرية بعد 1945.</p>
-            </div>
-            <div class="lesson-card lesson-item">
-                <h4>2. جغرافيا: أشغال الخريطة ومصطلحات التكتلات</h4>
-                <p>شرح مصطلحات البترول، الميزان التجاري، والتكتلات الاقتصادية الكبرى.</p>
-            </div>
-          `,
-          general: `
-            <div class="lesson-card lesson-item">
-                <h4>قوانين ونظام المنتدى</h4>
-                <p>احترام زملائك الطلاب، وتبادل الأفكار والنصائح الخاصة بالاستعداد للبكالوريا.</p>
-            </div>
-          `
+      // وضع الإضاءة / الليل
+      window.toggleTheme = function() {
+          document.body.classList.toggle('light-theme');
       };
+
+      // قاعدة الدروس + روابط PDF
+      const materialsData = {
+          philo: [
+              { title: "1. مقالة الشعور واللاشعور (جدلية)", desc: "الموقف الأول: المدرسة الكلاسيكية (ديكارت). الموقف الثاني: مدرسة التحليل النفسي (فرويد).", pdf: "#" },
+              { title: "2. مقالة الرياضيات بين العقل والتجربة", desc: "مراجعة شاملة لنشأة المفاهيم الرياضية وطبيعة البرهان الرياضي.", pdf: "#" }
+          ],
+          arabic: [
+              { title: "1. القواعد: الأحكام النحوية لـ (إذْ، إذًا، إذن)", desc: "شرح الفرق بين إذ الظرفية، التعليلية، والفجائية مع مواضع الإعراب.", pdf: "#" },
+              { title: "2. البلاغة: المجاز المرسل وعلاقاته", desc: "كيفية التعرف على العلاقات (الجزئية، الكلية، السببية والمسببية).", pdf: "#" }
+          ],
+          history: [
+              { title: "1. تاريخ: بروز الصراع وتشكل العالم", desc: "معايير تشكل العالم السياسية، الاقتصادية، والعسكرية بعد 1945.", pdf: "#" },
+              { title: "2. جغرافيا: أشغال الخريطة ومصطلحات التكتلات", desc: "شرح مصطلحات البترول، الميزان التجاري، والتكتلات الاقتصادية الكبرى.", pdf: "#" }
+          ],
+          general: [
+              { title: "قوانين ونظام المنتدى", desc: "احترام زملائك الطلاب، وتبادل الأفكار والنصائح الخاصة بالاستعداد للبكالوريا.", pdf: "#" }
+          ]
+      };
+
+      let activeLessons = [];
 
       window.showHomePage = function() {
           document.getElementById('homePage').style.display = 'block';
@@ -227,10 +256,35 @@
           document.getElementById('subjectPage').style.display = 'flex';
           
           subjectTitle.innerText = icon + ' ' + titleName;
-          materialsContent.innerHTML = materialsData[key] || '<p>لا توجد دروس حالياً.</p>';
+          activeLessons = materialsData[key] || [];
+          renderLessons(activeLessons);
 
           if (currentRef) off(currentRef);
           listenToRoom(key);
+      };
+
+      function renderLessons(list) {
+          materialsContent.innerHTML = '';
+          if(list.length === 0) {
+              materialsContent.innerHTML = '<p style="color: var(--text-sub);">لا توجد نتائج للبحث.</p>';
+              return;
+          }
+          list.forEach(item => {
+              const div = document.createElement('div');
+              div.className = 'lesson-card lesson-item';
+              div.innerHTML = `
+                  <h4>${item.title}</h4>
+                  <p>${item.desc}</p>
+                  <a href="${item.pdf}" class="pdf-download-btn">📄 تحميل الملخص PDF</a>
+              `;
+              materialsContent.appendChild(div);
+          });
+      }
+
+      window.filterLessons = function() {
+          const query = document.getElementById('lessonSearch').value.toLowerCase();
+          const filtered = activeLessons.filter(l => l.title.toLowerCase().includes(query) || l.desc.toLowerCase().includes(query));
+          renderLessons(filtered);
       };
 
       function listenToRoom(room) {
