@@ -5,121 +5,139 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة الآداب والفلسفة - B4C</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: #0f172a; color: #f8fafc; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0b0f19; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
 
         /* الهيدر العلوي */
-        header { background-color: #1e293b; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
-        header h1 { font-size: 1.2rem; color: #38bdf8; }
-        .user-chip { background: #0f172a; padding: 6px 12px; border-radius: 8px; border: 1px solid #334155; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
-        .user-chip input { background: transparent; border: none; color: #38bdf8; font-weight: bold; width: 110px; outline: none; }
+        header { background: #111827; border-bottom: 1px solid #1f2937; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.3rem; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .user-profile { background: #1f2937; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; border: 1px solid #374151; display: flex; align-items: center; gap: 8px; }
+        .user-profile input { background: transparent; border: none; color: #38bdf8; font-weight: bold; outline: none; width: 100px; }
 
-        /* الشاشة الرئيسية */
-        .app-layout { display: flex; flex: 1; overflow: hidden; }
+        /* الحاوية الرئيسية */
+        .container { max-width: 1200px; margin: 0 auto; width: 90%; padding: 25px 0; flex: 1; }
 
-        /* القائمة الجانبية (للكامبيوتر) / العلوية (للعدف) */
-        .nav-sidebar { width: 240px; background: #1e293b; padding: 15px; display: flex; flex-direction: column; gap: 8px; border-left: 1px solid #334155; flex-shrink: 0; }
-        .nav-sidebar h3 { font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px; }
-        .nav-btn { display: flex; align-items: center; gap: 10px; padding: 12px; background: transparent; color: #cbd5e1; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-align: right; width: 100%; transition: 0.2s; }
-        .nav-btn:hover { background: #334155; color: #fff; }
-        .nav-btn.active { background: #2563eb; color: #fff; }
+        /* 1. شبكة المواد (الصفحة الرئيسية) */
+        .subjects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 20px; }
+        .subject-card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 24px; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden; }
+        .subject-card:hover { transform: translateY(-5px); border-color: #38bdf8; box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.1); }
+        .subject-card .icon { font-size: 2.5rem; }
+        .subject-card h3 { font-size: 1.2rem; color: #f8fafc; }
+        .subject-card p { font-size: 0.88rem; color: #9ca3af; line-height: 1.5; }
+        .subject-card .badge { align-self: flex-start; background: rgba(56, 189, 248, 0.1); color: #38bdf8; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
 
-        /* منطقة المحتوى */
-        .content-body { flex: 1; display: flex; flex-direction: column; background: #0f172a; overflow: hidden; }
-
-        /* تبويبات التبديل في التليفون */
-        .mobile-tabs { display: none; background: #1e293b; border-bottom: 1px solid #334155; }
-        .m-tab { flex: 1; padding: 12px; background: none; border: none; color: #94a3b8; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; }
-        .m-tab.active { color: #38bdf8; border-bottom-color: #38bdf8; background: rgba(56, 189, 248, 0.05); }
-
-        /* تقسيم الشاشة في الكمبيوتر: دروس + شات */
-        .main-workspace { flex: 1; display: flex; overflow: hidden; }
-
-        /* قسم الدروس */
-        .lessons-panel { width: 320px; background: #182234; padding: 15px; border-left: 1px solid #334155; overflow-y: auto; }
-        .lessons-panel h3 { font-size: 1rem; color: #38bdf8; margin-bottom: 12px; }
-        .lesson-card { background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-right: 3px solid #2563eb; font-size: 0.88rem; line-height: 1.4; }
-
-        /* قسم الشات */
-        .chat-panel { flex: 1; display: flex; flex-direction: column; background: #0f172a; }
-        .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        /* 2. واجهة المادة التعليمية (تظهر عند اختيار المادة) */
+        .subject-page { display: none; flex-direction: column; gap: 20px; }
+        .back-btn { align-self: flex-start; background: #1f2937; color: #38bdf8; border: 1px solid #374151; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
         
-        .msg-box { max-width: 75%; padding: 10px 14px; border-radius: 12px; font-size: 0.9rem; word-break: break-word; }
-        .msg-other { background: #1e293b; color: #f8fafc; align-self: flex-start; border-bottom-right-radius: 2px; }
-        .msg-me { background: #2563eb; color: #ffffff; align-self: flex-end; border-bottom-left-radius: 2px; }
-        .msg-sender { font-size: 0.72rem; font-weight: bold; color: #38bdf8; margin-bottom: 3px; display: block; }
+        .subject-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+
+        /* قسم الدروس الأساسي */
+        .materials-section { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 20px; }
+        .materials-section h2 { color: #38bdf8; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid #1f2937; padding-bottom: 10px; }
+        
+        .lesson-item { background: #1f2937; border-radius: 10px; padding: 16px; margin-bottom: 12px; border-right: 4px solid #38bdf8; }
+        .lesson-item h4 { font-size: 1rem; color: #f3f4f6; margin-bottom: 6px; }
+        .lesson-item p { font-size: 0.88rem; color: #9ca3af; line-height: 1.5; }
+
+        /* قسم الدردشة الفرعي المصغر */
+        .chat-subpanel { background: #111827; border: 1px solid #1f2937; border-radius: 16px; display: flex; flex-direction: column; height: 500px; }
+        .chat-header { padding: 12px 16px; background: #1f2937; border-top-left-radius: 16px; border-top-right-radius: 16px; font-size: 0.9rem; font-weight: bold; color: #38bdf8; }
+        .chat-messages { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        
+        .msg-box { max-width: 85%; padding: 8px 12px; border-radius: 10px; font-size: 0.82rem; word-break: break-word; }
+        .msg-other { background: #1f2937; color: #f3f4f6; align-self: flex-start; }
+        .msg-me { background: #2563eb; color: #fff; align-self: flex-end; }
+        .msg-sender { font-size: 0.7rem; font-weight: bold; color: #38bdf8; display: block; margin-bottom: 2px; }
         .msg-me .msg-sender { color: #bfdbfe; }
-        .msg-time { font-size: 0.65rem; opacity: 0.7; float: left; margin-top: 4px; margin-right: 8px; }
 
-        .input-area { padding: 12px; background: #1e293b; border-top: 1px solid #334155; display: flex; gap: 8px; }
-        input[type="text"]#userInput { flex: 1; padding: 10px 14px; border: 1px solid #334155; background: #0f172a; color: #fff; border-radius: 8px; outline: none; }
-        button#sendBtn { padding: 0 20px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .chat-input { padding: 10px; border-top: 1px solid #1f2937; display: flex; gap: 6px; }
+        .chat-input input { flex: 1; padding: 8px 12px; background: #1f2937; border: 1px solid #374151; color: #fff; border-radius: 6px; outline: none; font-size: 0.85rem; }
+        .chat-input button { background: #2563eb; color: #fff; border: none; padding: 0 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
 
-        /* تجاوب الشاشة للهواتف (Responsive Mobile View) */
-        @media (max-width: 768px) {
-            .app-layout { flex-direction: column; }
-            .nav-sidebar { width: 100%; height: auto; padding: 8px; flex-direction: row; overflow-x: auto; border-left: none; border-bottom: 1px solid #334155; }
-            .nav-sidebar h3 { display: none; }
-            .nav-btn { width: auto; white-space: nowrap; padding: 8px 14px; font-size: 0.85rem; }
-            
-            .mobile-tabs { display: flex; }
-            .main-workspace { flex-direction: column; }
-            .lessons-panel { width: 100%; border-left: none; display: none; }
-            .msg-box { max-width: 88%; }
+        /* للهواتف المحمولة */
+        @media (max-width: 850px) {
+            .subject-layout { grid-template-columns: 1fr; }
+            .chat-subpanel { height: 350px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>📜 منصة الآداب والفلسفة - B4C</h1>
-        <div class="user-chip">
+        <div class="logo" onclick="showHomePage()">📜 B4C آداب وفلسفة</div>
+        <div class="user-profile">
             <span>👤</span>
-            <input type="text" id="usernameInput" placeholder="اسمك...">
+            <input type="text" id="usernameInput" placeholder="اسم الطالب">
         </div>
     </header>
 
-    <div class="app-layout">
-        <!-- القائمة الجانبية (للكامبيوتر) / شريط أفقي قابل للسحب (للتليفون) -->
-        <nav class="nav-sidebar">
-            <h3>الأقسام التعليمية</h3>
-            <button class="nav-btn active" onclick="switchSection('general', this)">💬 الدردشة العامة</button>
-            <button class="nav-btn" onclick="switchSection('philo', this)">🧠 قسم الفلسفة</button>
-            <button class="nav-btn" onclick="switchSection('arabic', this)">📚 الأدب العربي</button>
-            <button class="nav-btn" onclick="switchSection('history', this)">🌍 الاجتماعيات</button>
-        </nav>
+    <div class="container">
+        
+        <!-- 1. الرئيسية: بطاقات المواد الأساسية -->
+        <div id="homePage">
+            <h2 style="font-size: 1.3rem; margin-bottom: 8px;">المواد المقررة للبكالوريا</h2>
+            <p style="color: #9ca3af; font-size: 0.9rem; margin-bottom: 20px;">اختر المادة لتصفح الدروس، المقالات والمناقشة الخاصة بها.</p>
 
-        <div class="content-body">
-            <!-- تبويبات الهواتف فقط -->
-            <div class="mobile-tabs" id="mobileTabs">
-                <button class="m-tab active" id="mChatBtn" onclick="toggleMobileView('chat')">💬 الدردشة الحية</button>
-                <button class="m-tab" id="mLessonsBtn" onclick="toggleMobileView('lessons')">📚 الملخصات</button>
-            </div>
-
-            <div class="main-workspace">
-                <!-- قسم الدروس والملخصات -->
-                <div class="lessons-panel" id="lessonsPanel">
-                    <h3 id="sectionTitle">الدردشة العامة</h3>
-                    <div id="lessonsContent">
-                        <p style="color: #94a3b8; font-size: 0.85rem;">مساحة عامة للتعارف وتبادل النظريات والأسئلة بين طلاب الآداب والفلسفة.</p>
-                    </div>
+            <div class="subjects-grid">
+                <!-- المادة 1: الفلسفة -->
+                <div class="subject-card" onclick="openSubject('philo', 'علم الفلسفة والمقالات', '🧠')">
+                    <span class="badge">المادة الأساسية (معامل 6)</span>
+                    <div class="icon">🧠</div>
+                    <h3>مادة الفلسفة</h3>
+                    <p>جميع المقالات الجدلية، الاستقصاء بالوضع، والمخططات المبسطة للمراجعة.</p>
                 </div>
 
-                <!-- قسم الدردشة -->
-                <div class="chat-panel" id="chatPanel">
-                    <div class="messages" id="messages">
-                        <div class="msg-box msg-other">
-                            <span class="msg-sender">النظام</span>
-                            جاري الاتصال...
-                        </div>
-                    </div>
-                    <div class="input-area">
-                        <input type="text" id="userInput" placeholder="اكتب مشاركتك هنا...">
+                <!-- المادة 2: الأدب العربي -->
+                <div class="subject-card" onclick="openSubject('arabic', 'الأدب العربي واللغات', '📚')">
+                    <span class="badge">معامل 5</span>
+                    <div class="icon">📚</div>
+                    <h3>اللغة العربية والآداب</h3>
+                    <p>تلخيص القواعد، إعراب الجمل والأحكام، والبلاغة المقررة شعبة آداب.</p>
+                </div>
+
+                <!-- المادة 3: التاريخ والجغرافيا -->
+                <div class="subject-card" onclick="openSubject('history', 'التاريخ والجغرافيا', '🌍')">
+                    <span class="badge">معامل 4</span>
+                    <div class="icon">🌍</div>
+                    <h3>التاريخ والجغرافيا</h3>
+                    <p>مصطلحات، شخصيات، تواريخ أساسية وملخصات الوحدات التعليمية.</p>
+                </div>
+
+                <!-- قسم الدردشة العامة الفرعية -->
+                <div class="subject-card" onclick="openSubject('general', 'الدردشة العامة للطلاب', '💬')">
+                    <span class="badge">فضاء التعارف</span>
+                    <div class="icon">💬</div>
+                    <h3>المنتدى العام</h3>
+                    <p>مساحة خاصة للتعارف والاستفسارات العامة بين طلاب البكالوريا.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. صفحة المادة (تظهر بعد النقرة) -->
+        <div id="subjectPage" class="subject-page">
+            <button class="back-btn" onclick="showHomePage()">➡️ العودة للمواد</button>
+            <h2 id="subjectTitle" style="color: #38bdf8;">اسم المادة</h2>
+
+            <div class="subject-layout">
+                <!-- قسم محتوى المادة (الدروس) -->
+                <div class="materials-section">
+                    <h2>📚 الدروس والملخصات الجاهزة</h2>
+                    <div id="materialsContent"></div>
+                </div>
+
+                <!-- قسم الدردشة الفرعي الجانبي -->
+                <div class="chat-subpanel">
+                    <div class="chat-header">💬 مناقشة المادة مباشرة</div>
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input">
+                        <input type="text" id="userInput" placeholder="اسأل أو ناقش نقطة...">
                         <button id="sendBtn">إرسال</button>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- Firebase SDK -->
@@ -141,14 +159,14 @@
       const app = initializeApp(firebaseConfig);
       const db = getDatabase(app);
 
-      const messagesContainer = document.getElementById('messages');
-      const userInput = document.getElementById('userInput');
       const usernameInput = document.getElementById('usernameInput');
+      const chatMessages = document.getElementById('chatMessages');
+      const userInput = document.getElementById('userInput');
       const sendBtn = document.getElementById('sendBtn');
-      const sectionTitle = document.getElementById('sectionTitle');
-      const lessonsContent = document.getElementById('lessonsContent');
+      const materialsContent = document.getElementById('materialsContent');
+      const subjectTitle = document.getElementById('subjectTitle');
 
-      let currentRoom = 'general';
+      let currentRoom = '';
       let currentRef = null;
       const myClientId = 'user_' + Math.random().toString(36).substr(2, 9);
 
@@ -157,102 +175,81 @@
           localStorage.setItem('bac_user_name', usernameInput.value.trim());
       });
 
-      const lessonsData = {
-          general: {
-              title: "💬 الدردشة العامة",
-              content: `<p style="color: #94a3b8; font-size: 0.85rem;">مساحة عامة للتعارف وتبادل النظريات والأسئلة بين طلاب الآداب والفلسفة.</p>`
-          },
-          philo: {
-              title: "🧠 قسم الفلسفة",
-              content: `
-                <div class="lesson-card"><b>مقالة 1:</b> إشكالية الشعور واللاشعور (مخطط جدلي جاهز).</div>
-                <div class="lesson-card"><b>مقالة 2:</b> أصل المفاهيم الرياضية (بين العقل والتجربة).</div>
-              `
-          },
-          arabic: {
-              title: "📚 الأدب العربي",
-              content: `
-                <div class="lesson-card"><b>القواعد:</b> إعراب إذْ، إذًا، وإذن بطريقة مبسطة.</div>
-                <div class="lesson-card"><b>البلاغة:</b> أهم علاقات المجاز المرسل واستخراجه.</div>
-              `
-          },
-          history: {
-              title: "🌍 الاجتماعيات",
-              content: `
-                <div class="lesson-card"><b>تاريخ:</b> معايير تشكل العالم بعد الحرب العالمية الثانية.</div>
-                <div class="lesson-card"><b>جغرافيا:</b> مصطلحات البترول، العولمة والتكتلات.</div>
-              `
-          }
+      // قاعدة بيانات المواد والدروس
+      const materialsData = {
+          philo: `
+            <div class="lesson-card lesson-item">
+                <h4>1. مقالة الشعور واللاشعور (جدلية)</h4>
+                <p><b>الموقف الأول:</b> المدرسة الكلاسيكية (ديكارت) تسترشد بأن كل ما هو نفسي هو شعوري.<br><b>الموقف الثاني:</b> مدرسة التحليل النفسي (فرويد) اللاشعور هو أساس السلوك.</p>
+            </div>
+            <div class="lesson-card lesson-item">
+                <h4>2. مقالة الرياضيات بين العقل والتجربة</h4>
+                <p>مراجعة شاملة لنشأة المفاهيم الرياضية وطبيعة البرهان الرياضي.</p>
+            </div>
+          `,
+          arabic: `
+            <div class="lesson-card lesson-item">
+                <h4>1. القواعد: الأحكام النحوية لـ (إذْ، إذًا، إذن)</h4>
+                <p>شرح الفرق بين إذ الظرفية، التعليلية، والفجائية مع مواضع الإعراب.</p>
+            </div>
+            <div class="lesson-card lesson-item">
+                <h4>2. البلاغة: المجاز المرسل وعلاقاته</h4>
+                <p>كيفية التعرف على العلاقات (الجزئية، الكلية، السببية والمسببية).</p>
+            </div>
+          `,
+          history: `
+            <div class="lesson-card lesson-item">
+                <h4>1. تاريخ: بروز الصراع وتشكل العالم</h4>
+                <p>معايير تشكل العالم السياسية، الاقتصادية، والعسكرية بعد 1945.</p>
+            </div>
+            <div class="lesson-card lesson-item">
+                <h4>2. جغرافيا: أشغال الخريطة ومصطلحات التكتلات</h4>
+                <p>شرح مصطلحات البترول، الميزان التجاري، والتكتلات الاقتصادية الكبرى.</p>
+            </div>
+          `,
+          general: `
+            <div class="lesson-card lesson-item">
+                <h4>قوانين ونظام المنتدى</h4>
+                <p>احترام زملائك الطلاب، وتبادل الأفكار والنصائح الخاصة بالاستعداد للبكالوريا.</p>
+            </div>
+          `
       };
 
-      window.switchSection = function(roomKey, btn) {
-          currentRoom = roomKey;
-          document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
+      window.showHomePage = function() {
+          document.getElementById('homePage').style.display = 'block';
+          document.getElementById('subjectPage').style.display = 'none';
+          if (currentRef) off(currentRef);
+      };
 
-          const data = lessonsData[roomKey];
-          sectionTitle.innerText = data.title;
-          lessonsContent.innerHTML = data.content;
-
-          // تحكم في تبويبات الهواتف
-          if(window.innerWidth <= 768) {
-              if(roomKey === 'general') {
-                  document.getElementById('mobileTabs').style.display = 'none';
-                  toggleMobileView('chat');
-              } else {
-                  document.getElementById('mobileTabs').style.display = 'flex';
-                  toggleMobileView('chat');
-              }
-          }
+      window.openSubject = function(key, titleName, icon) {
+          currentRoom = key;
+          document.getElementById('homePage').style.display = 'none';
+          document.getElementById('subjectPage').style.display = 'flex';
+          
+          subjectTitle.innerText = icon + ' ' + titleName;
+          materialsContent.innerHTML = materialsData[key] || '<p>لا توجد دروس حالياً.</p>';
 
           if (currentRef) off(currentRef);
-          listenToRoom(roomKey);
-      };
-
-      window.toggleMobileView = function(view) {
-          const chatPanel = document.getElementById('chatPanel');
-          const lessonsPanel = document.getElementById('lessonsPanel');
-          const mChatBtn = document.getElementById('mChatBtn');
-          const mLessonsBtn = document.getElementById('mLessonsBtn');
-
-          if(view === 'chat') {
-              chatPanel.style.display = 'flex';
-              lessonsPanel.style.display = 'none';
-              mChatBtn.classList.add('active');
-              mLessonsBtn.classList.remove('active');
-          } else {
-              chatPanel.style.display = 'none';
-              lessonsPanel.style.display = 'block';
-              mLessonsBtn.classList.add('active');
-              mChatBtn.classList.remove('active');
-          }
+          listenToRoom(key);
       };
 
       function listenToRoom(room) {
           currentRef = ref(db, 'rooms/' + room);
           onValue(currentRef, (snapshot) => {
-              messagesContainer.innerHTML = '';
+              chatMessages.innerHTML = '';
               const data = snapshot.val();
               if (data) {
                   Object.values(data).forEach((msg) => {
                       const isMe = msg.clientId === myClientId;
                       const div = document.createElement('div');
                       div.className = `msg-box ${isMe ? 'msg-me' : 'msg-other'}`;
-                      
-                      const date = new Date(msg.timestamp || Date.now());
-                      const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-                      div.innerHTML = `
-                          <span class="msg-sender">${isMe ? 'أنت' : (msg.sender || 'طالب')}</span>
-                          ${msg.text}
-                          <span class="msg-time">${timeStr}</span>
-                      `;
-                      messagesContainer.appendChild(div);
+                      div.innerHTML = `<span class="msg-sender">${isMe ? 'أنت' : (msg.sender || 'طالب')}</span>${msg.text}`;
+                      chatMessages.appendChild(div);
                   });
               } else {
-                  messagesContainer.innerHTML = '<div class="msg-box msg-other"><span class="msg-sender">النظام</span>لا توجد رسائل بعد، ابدأ النقاش!</div>';
+                  chatMessages.innerHTML = '<div class="msg-box msg-other"><span class="msg-sender">النظام</span>لا توجد مناقشات بعد، اسأل سؤالك الأول!</div>';
               }
-              messagesContainer.scrollTop = messagesContainer.scrollHeight;
+              chatMessages.scrollTop = chatMessages.scrollHeight;
           });
       }
 
@@ -274,9 +271,6 @@
       userInput.addEventListener('keypress', (e) => {
           if (e.key === 'Enter') sendMessage();
       });
-
-      // التشغيل الافتراضي
-      switchSection('general', document.querySelectorAll('.nav-btn')[0]);
     </script>
 </body>
 </html>
