@@ -2,346 +2,317 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0f172a">
-  <meta name="description" content="منصة B4C لطلاب البكالوريا شعبة الآداب والفلسفة">
-  <title>B4C | منصة الآداب والفلسفة</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#0b1120">
+  <title>منصة B4C التعليمية</title>
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #0b1120;
       --surface: #151f32;
-      --surface2: #202d43;
+      --surface2: #1e293b;
       --accent: #38bdf8;
-      --text: #f1f5f9;
-      --muted: #a5b4c8;
-      --border: #304158;
-      --danger: #f87171;
-      --radius: 18px;
+      --accent-hover: #0284c7;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+      --danger: #ef4444;
+      --radius: 16px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-user-select: none; user-select: none; }
+    .selectable { -webkit-user-select: text !important; user-select: text !important; }
 
-    body {
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    }
+    body { min-height: 100vh; background: var(--bg); color: var(--text); display: flex; flex-direction: column; }
 
-    button, input { font: inherit; }
-    button { cursor: pointer; }
-    button:focus-visible, input:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
-    }
+    /* شاشة تسجيل الدخول */
+    .screen { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+    .auth-card { width: 100%; max-width: 400px; padding: 36px 24px; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .auth-card h1 { font-size: 1.6rem; color: var(--accent); margin-bottom: 8px; }
+    .auth-card p { font-size: 0.9rem; color: var(--muted); margin-bottom: 24px; }
+    .btn-google { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: bold; background: #fff; color: #0f172a; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; font-size: 0.95rem; }
 
-    .hidden { display: none !important; }
-    .muted { color: var(--muted); }
-    .accent { color: var(--accent); }
+    #appArea { display: none; flex-direction: column; min-height: 100vh; }
 
-    .screen {
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-    }
+    /* الهيدر العلوي */
+    header { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; background: rgba(21, 31, 50, 0.9); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+    .online-count { background: rgba(34, 197, 94, 0.15); color: #4ade80; padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: bold; border: 1px solid rgba(34, 197, 94, 0.3); }
+    .user-nav { display: flex; align-items: center; gap: 12px; }
+    .user-avatar-header { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; cursor: pointer; }
 
-    .auth-card {
-      width: 100%;
-      max-width: 420px;
-      padding: 34px 24px;
-      text-align: center;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: 0 20px 70px #0003;
-    }
+    /* محتوى الصفحات */
+    main { flex: 1; padding: 20px 16px 80px 16px; max-width: 900px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; }
 
-    .logo {
-      display: inline-grid;
-      place-items: center;
-      width: 66px;
-      height: 66px;
-      margin-bottom: 16px;
-      border-radius: 20px;
-      background: #38bdf81c;
-      color: var(--accent);
-      font-size: 30px;
-    }
+    .page { display: none; flex-direction: column; gap: 16px; }
+    .page.active { display: flex; }
 
-    h1 { margin: 0 0 10px; font-size: 1.7rem; }
-    p { line-height: 1.7; }
+    .page-title { font-size: 1.3rem; font-weight: bold; color: var(--text); }
+    .page-desc { font-size: 0.88rem; color: var(--muted); margin-top: -10px; margin-bottom: 10px; }
 
-    .btn {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      min-height: 44px;
-      padding: 10px 16px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--text);
-      background: var(--surface2);
-      font-weight: 700;
-    }
+    /* شريط الملاحة السفلي (Bottom Navigation) */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--muted); background: none; border: none; font-size: 0.75rem; font-weight: bold; cursor: pointer; flex: 1; }
+    .nav-item.active { color: var(--accent); }
+    .nav-item .icon { font-size: 1.3rem; }
 
-    .btn-primary {
-      color: #071421;
-      background: var(--accent);
-      border-color: var(--accent);
-    }
+    /* شبكة المواد */
+    .subjects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .subject-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; cursor: pointer; transition: transform 0.15s, border-color 0.15s; display: flex; align-items: center; justify-content: space-between; }
+    .subject-card:active { transform: scale(0.98); }
+    .subject-card h3 { font-size: 1.05rem; margin-bottom: 4px; }
+    .subject-card p { font-size: 0.8rem; color: var(--muted); }
+    .subject-tag { background: rgba(56, 189, 248, 0.12); color: var(--accent); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
 
-    .btn-google {
-      width: 100%;
-      margin-top: 16px;
-      background: #fff;
-      color: #111827;
-      border-color: #fff;
-    }
+    /* بطاقات المنشورات */
+    .posts-list { display: flex; flex-direction: column; gap: 14px; }
+    .post-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .post-header { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .post-author-img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
+    .post-author-name { font-size: 0.85rem; font-weight: bold; color: var(--text); }
+    .post-subject-badge { font-size: 0.72rem; color: var(--accent); background: rgba(56, 189, 248, 0.1); padding: 2px 8px; border-radius: 10px; margin-right: auto; }
+    .post-title { font-size: 1rem; font-weight: bold; color: var(--accent); }
+    .post-body { font-size: 0.88rem; color: var(--text); line-height: 1.5; white-space: pre-wrap; }
+    .post-image { width: 100%; max-height: 350px; border-radius: 12px; object-fit: cover; margin-top: 6px; }
+    .post-link { display: inline-block; color: var(--accent); font-size: 0.82rem; word-break: break-all; margin-top: 4px; text-decoration: underline; }
 
-    .btn:disabled { opacity: .55; cursor: not-allowed; }
+    /* الشات */
+    .chat-container { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); height: calc(100vh - 180px); display: flex; flex-direction: column; overflow: hidden; }
+    .chat-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+    .msg-row { display: flex; gap: 10px; align-items: flex-start; max-width: 88%; }
+    .msg-row.mine { align-self: flex-end; flex-direction: row-reverse; }
+    .msg-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; cursor: pointer; }
+    .msg-box { padding: 10px 14px; border-radius: 14px; font-size: 0.88rem; line-height: 1.4; word-break: break-word; }
+    .msg-row.other .msg-box { background: var(--surface2); color: var(--text); border-top-right-radius: 2px; }
+    .msg-row.mine .msg-box { background: #2563eb; color: #fff; border-top-left-radius: 2px; }
+    .msg-author { font-size: 0.72rem; color: var(--accent); font-weight: bold; margin-bottom: 3px; display: block; cursor: pointer; }
+    .msg-row.mine .msg-author { color: #bfdbfe; }
+    .chat-bar { padding: 12px; background: var(--bg); border-top: 1px solid var(--border); display: flex; gap: 8px; }
+    .chat-bar input { flex: 1; background: var(--surface); border: 1px solid var(--border); color: #fff; padding: 10px 14px; border-radius: 10px; outline: none; font-size: 0.88rem; }
+    .chat-bar button { background: #2563eb; color: #fff; border: none; padding: 0 16px; border-radius: 10px; font-weight: bold; cursor: pointer; }
 
-    .error {
-      margin-top: 14px;
-      color: var(--danger);
-      font-size: .9rem;
-      overflow-wrap: anywhere;
-    }
+    /* نماذج الإدخال وصفحة البروفايل */
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 0.85rem; color: var(--muted); font-weight: bold; }
+    .form-control { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 12px; outline: none; font-size: 0.9rem; }
+    .form-control:focus { border-color: var(--accent); }
+    textarea.form-control { min-height: 100px; resize: vertical; }
+    .btn-submit { background: var(--accent); color: #0f172a; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 0.95rem; }
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px max(16px, calc((100% - 960px) / 2));
-      background: #151f32ed;
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(14px);
-    }
+    .profile-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .profile-img-large { width: 85px; height: 85px; border-radius: 50%; border: 3px solid var(--accent); object-fit: cover; }
+    .btn-logout { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: bold; cursor: pointer; margin-top: 8px; }
 
-    .brand { color: var(--accent); font-weight: 900; font-size: 1.05rem; }
-
-    .user-nav { display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
-    .logout { color: var(--danger); background: #f8717114; border-color: #f8717130; }
-
-    main {
-      width: min(100% - 32px, 920px);
-      margin: 20px auto;
-      padding-bottom: 24px;
-    }
-
-    .hero { margin-bottom: 20px; }
-    .hero h2 { margin-bottom: 6px; font-size: 1.55rem; }
-    .hero p { margin-top: 0; color: var(--muted); }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .subject-card {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-      min-height: 140px;
-      padding: 20px;
-      text-align: right;
-      color: var(--text);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      transition: border-color .2s, transform .2s;
-    }
-
-    .subject-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .subject-icon { font-size: 1.8rem; }
-    .subject-card strong { font-size: 1.05rem; }
-    .subject-card small { color: var(--muted); line-height: 1.5; }
-
-    .tag {
-      display: inline-block;
-      padding: 4px 9px;
-      border-radius: 30px;
-      color: var(--accent);
-      background: #38bdf815;
-      font-size: .75rem;
-    }
-
-    .chat-page { display: flex; flex-direction: column; gap: 14px; }
-    .chat-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-
-    .chat-box {
-      display: flex;
-      flex-direction: column;
-      height: min(72vh, 680px);
-      min-height: 380px;
-      overflow: hidden;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-    }
-
-    .chat-status { padding: 10px 15px; color: var(--muted); font-size: .8rem; border-bottom: 1px solid var(--border); }
-
-    .messages {
-      flex: 1;
-      min-height: 0;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-    }
-
-    .message-row { display: flex; gap: 8px; align-items: flex-start; max-width: 88%; }
-    .message-row.mine { align-self: flex-end; flex-direction: row-reverse; }
-
-    .msg-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-
-    .message {
-      padding: 10px 13px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 15px 4px 15px 15px;
-    }
-
-    .message.mine {
-      background: #173b66;
-      border-color: #28578a;
-      border-radius: 4px 15px 15px 15px;
-    }
-
-    .message-author { display: block; margin-bottom: 4px; color: var(--accent); font-size: .75rem; font-weight: 800; }
-    .message.mine .message-author { color: #bfdbfe; }
-    .message-text { white-space: pre-wrap; line-height: 1.6; user-select: text; -webkit-user-select: text; }
-
-    .reactions { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
-    .reaction-btn { padding: 3px 8px; border: 1px solid var(--border); border-radius: 20px; background: #0b1120; color: var(--text); font-size: 0.78rem; }
-
-    .composer { display: flex; gap: 8px; padding: 12px; background: var(--bg); border-top: 1px solid var(--border); }
-    .composer input { width: 100%; padding: 12px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
-
-    .reaction-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 100; }
-    .reaction-box { background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 10px 18px; display: flex; gap: 14px; font-size: 1.5rem; }
-    .reaction-box span { cursor: pointer; transition: transform 0.1s; }
-    .reaction-box span:hover { transform: scale(1.3); }
-
-    @media (max-width: 560px) {
-      .cards { grid-template-columns: 1fr; }
-      .message-row { max-width: 95%; }
-    }
+    .back-btn { align-self: flex-start; background: var(--surface2); color: var(--accent); border: 1px solid var(--border); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: bold; margin-bottom: 10px; }
   </style>
 </head>
 
 <body>
 
-  <div class="reaction-modal" id="reactionModal" onclick="closePicker()">
-    <div class="reaction-box" onclick="event.stopPropagation()">
-      <span onclick="confirmEmoji('👍')">👍</span>
-      <span onclick="confirmEmoji('😂')">😂</span>
-      <span onclick="confirmEmoji('😮')">😮</span>
-      <span onclick="confirmEmoji('😢')">😢</span>
-      <span onclick="confirmEmoji('🚩')">🚩</span>
+  <!-- تسجيل الدخول -->
+  <div class="screen" id="authScreen">
+    <div class="auth-card">
+      <h1>منصة B4C التعليمية</h1>
+      <p>فضاء المراجعة والتعاون لطلاب الآداب والفلسفة</p>
+      <button class="btn-google" id="googleLoginBtn">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="">
+        متابعة باستخدام Google
+      </button>
     </div>
   </div>
 
-  <section id="authScreen" class="screen">
-    <div class="auth-card">
-      <div class="logo" aria-hidden="true">📚</div>
-      <h1 class="accent">منصة B4C</h1>
-      <p class="muted">فضاء المراجعة والتعاون لطلاب الآداب والفلسفة</p>
-      <button id="googleLoginBtn" class="btn btn-google" type="button">
-        <span aria-hidden="true">G</span>
-        متابعة باستخدام Google
-      </button>
-      <p id="authError" class="error" role="alert" aria-live="polite"></p>
-    </div>
-  </section>
-
-  <div id="appArea" class="hidden">
+  <!-- التطبيق الرئيسي -->
+  <div id="appArea">
     <header>
-      <div class="brand">📜 B4C | بكالوريا</div>
+      <span class="online-count">🟢 <span id="onlineCounter">1</span> متصل</span>
       <div class="user-nav">
-        <img id="userAvatar" class="user-avatar" src="" alt="حسابي">
-        <button id="logoutBtn" class="btn logout" type="button">تسجيل الخروج</button>
+        <img id="headerUserAvatar" class="user-avatar-header" src="" alt="بروفايلي" onclick="navigateTo('profilePage')">
       </div>
     </header>
 
     <main>
-      <section id="homePage">
-        <div class="hero">
-          <h2>موادك الدراسية 🎓</h2>
-          <p>اختار المادة، راجع دروسك وناقش مع زملائك.</p>
-        </div>
+      <!-- 1. صفحة المواد الدراسية -->
+      <section id="subjectsPage" class="page active">
+        <div class="page-title">📚 المواد الدراسية</div>
+        <div class="page-desc">تصفح منشورات وملخصات المواد المقررة للبكالوريا.</div>
 
-        <div class="cards">
-          <button class="subject-card" data-room="philo" data-title="الفلسفة" type="button">
-            <span class="subject-icon">🧠</span>
-            <strong>الفلسفة</strong>
-            <small>المقالات الجدلية والاستقصائية</small>
-            <span class="tag">معامل 6</span>
-          </button>
-
-          <button class="subject-card" data-room="arabic" data-title="اللغة العربية" type="button">
-            <span class="subject-icon">📚</span>
-            <strong>اللغة العربية</strong>
-            <small>القواعد والبلاغة والنقد</small>
-            <span class="tag">معامل 5</span>
-          </button>
-
-          <button class="subject-card" data-room="history" data-title="التاريخ والجغرافيا" type="button">
-            <span class="subject-icon">🌍</span>
-            <strong>التاريخ والجغرافيا</strong>
-            <small>المصطلحات والتواريخ والخرائط</small>
-            <span class="tag">معامل 4</span>
-          </button>
-
-          <button class="subject-card" data-room="general" data-title="المنتدى العام" type="button">
-            <span class="subject-icon">💬</span>
-            <strong>المنتدى العام</strong>
-            <small>أسئلة ومناقشات عامة</small>
-            <span class="tag">عام</span>
-          </button>
-        </div>
-      </section>
-
-      <section id="subjectView" class="chat-page hidden">
-        <div class="chat-top">
-          <button id="backBtn" class="btn" type="button">→ المواد</button>
-          <h2 id="subjectTitle">المناقشة</h2>
-        </div>
-
-        <div class="chat-box">
-          <div id="chatStatus" class="chat-status" role="status">جاري الاتصال...</div>
-          <div id="chatMessages" class="messages" aria-live="polite">
-            <p class="empty">جاري تحميل الرسائل...</p>
+        <div class="subjects-grid">
+          <div class="subject-card" onclick="openSubjectView('philo', 'الفلسفة')">
+            <div>
+              <h3>🧠 الفلسفة</h3>
+              <p>المقالات الجدلية والاستقصاء</p>
+            </div>
+            <span class="subject-tag">معامل 6</span>
           </div>
 
-          <form id="chatForm" class="composer">
-            <input id="userInput" type="text" maxlength="1000" autocomplete="off" placeholder="اكتب رسالتك..." aria-label="نص الرسالة" required>
-            <button id="sendBtn" class="btn btn-primary" type="submit">إرسال</button>
-          </form>
+          <div class="subject-card" onclick="openSubjectView('arabic', 'اللغة العربية')">
+            <div>
+              <h3>📚 اللغة العربية</h3>
+              <p>القواعد والبلاغة والتقويم النقدي</p>
+            </div>
+            <span class="subject-tag">معامل 5</span>
+          </div>
+
+          <div class="subject-card" onclick="openSubjectView('history', 'التاريخ والجغرافيا')">
+            <div>
+              <h3>🌍 التاريخ والجغرافيا</h3>
+              <p>المصطلحات الشخصيات والخرائط</p>
+            </div>
+            <span class="subject-tag">معامل 4</span>
+          </div>
+
+          <div class="subject-card" onclick="openSubjectView('islamic', 'العلوم الإسلامية')">
+            <div>
+              <h3>العلوم الإسلامية</h3>
+              <p>الآيات، الأحكام والفوائد</p>
+            </div>
+            <span class="subject-tag">معامل 2</span>
+          </div>
+
+          <div class="subject-card" onclick="openSubjectView('french', 'اللغة الفرنسية')">
+            <div>
+              <h3>🇫🇷 اللغة الفرنسية</h3>
+              <p>النصوص والملخصات المقررة</p>
+            </div>
+            <span class="subject-tag">معامل 3</span>
+          </div>
+
+          <div class="subject-card" onclick="openSubjectView('english', 'اللغة الإنجليزية')">
+            <div>
+              <h3>🇬🇧 اللغة الإنجليزية</h3>
+              <p>القواعد والدروس المقررة</p>
+            </div>
+            <span class="subject-tag">معامل 3</span>
+          </div>
+
+          <div class="subject-card" onclick="openSubjectView('math', 'الرياضيات')">
+            <div>
+              <h3>📐 الرياضيات</h3>
+              <p>الدوال المتتاليات والاحتمالات</p>
+            </div>
+            <span class="subject-tag">معامل 2</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- صفحة منشورات مادة محددة -->
+      <section id="subjectPostsPage" class="page">
+        <button class="back-btn" onclick="navigateTo('subjectsPage')">← العودة للمواد</button>
+        <div class="page-title" id="currentSubjectTitle">منشورات المادة</div>
+        <div class="posts-list" id="subjectPostsContainer"></div>
+      </section>
+
+      <!-- 2. صفحة الدردشة العامة -->
+      <section id="chatPage" class="page">
+        <div class="page-title">💬 الدردشة العامة</div>
+        <div class="chat-container">
+          <div class="chat-messages" id="chatMessages"></div>
+          <div class="chat-bar">
+            <input type="text" id="userInput" class="selectable" placeholder="اكتب رسالتك هنا...">
+            <button id="sendBtn">إرسال</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. صفحة النشر الجديدة -->
+      <section id="createPostPage" class="page">
+        <div class="page-title">➕ إضافة منشور أو ملخص</div>
+        <div class="page-desc">شارِك زملائك ملخصاً، درساً، أو فائدة دراسية.</div>
+
+        <form id="postForm" style="display:flex; flex-direction:column; gap:14px;">
+          <div class="form-group">
+            <label>المادة الدراسية:</label>
+            <select id="postSubjectSelect" class="form-control" required>
+              <option value="philo">الفلسفة</option>
+              <option value="arabic">اللغة العربية</option>
+              <option value="history">التاريخ والجغرافيا</option>
+              <option value="islamic">العلوم الإسلامية</option>
+              <option value="french">اللغة الفرنسية</option>
+              <option value="english">اللغة الإنجليزية</option>
+              <option value="math">الرياضيات</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>عنوان الدرس أو الملخص:</label>
+            <input type="text" id="postTitleInput" class="form-control selectable" placeholder="مثال: مقالة الشعور واللاشعور" required>
+          </div>
+
+          <div class="form-group">
+            <label>محتوى الدرس / النص:</label>
+            <textarea id="postContentInput" class="form-control selectable" placeholder="اكتب التفاصيل أو الشرح هنا..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>رابط صورة مرفقة (اختياري):</label>
+            <input type="url" id="postImgInput" class="form-control selectable" placeholder="https://example.com/image.jpg">
+          </div>
+
+          <div class="form-group">
+            <label>رابط خارجي للملف / PDF (اختياري):</label>
+            <input type="url" id="postLinkInput" class="form-control selectable" placeholder="https://drive.google.com/...">
+          </div>
+
+          <button type="submit" class="btn-submit">نشر في المنصة 🚀</button>
+        </form>
+      </section>
+
+      <!-- 4. صفحة البروفايل والملف الشخصي -->
+      <section id="profilePage" class="page">
+        <button class="back-btn" onclick="navigateTo('subjectsPage')">← العودة</button>
+        <div class="profile-card">
+          <img id="profileAvatarImg" class="profile-img-large" src="" alt="الصورة الشخصية">
+          <h2 id="profileNameText">اسم الطالب</h2>
+          <button class="btn-logout" id="logoutBtn">تسجيل الخروج</button>
         </div>
 
-        <p id="chatError" class="error" role="alert" aria-live="polite"></p>
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-top:14px;">
+          <h4 style="margin-bottom:12px; color:var(--accent);">⚙️ تعديل بيانات الحساب:</h4>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label>الاسم الكامل:</label>
+            <input type="text" id="editNameInput" class="form-control selectable">
+          </div>
+          <div class="form-group" style="margin-bottom:14px;">
+            <label>رابط الصورة الشخصية (URL):</label>
+            <input type="url" id="editAvatarInput" class="form-control selectable">
+          </div>
+          <button id="saveProfileBtn" class="btn-submit" style="width:100%;">حفظ التعديلات</button>
+        </div>
+
+        <h3 style="margin-top:20px; font-size:1.1rem; color:var(--text);" id="userPostsHeading">📝 المنشورات والملخصات المشاركة:</h3>
+        <div class="posts-list" id="userPostsContainer" style="margin-top:10px;"></div>
       </section>
     </main>
+
+    <!-- شريط التنقل السفلي -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="navigateTo('subjectsPage')">
+        <span class="icon">📚</span>
+        <span>المواد</span>
+      </button>
+
+      <button class="nav-item" onclick="navigateTo('chatPage')">
+        <span class="icon">💬</span>
+        <span>الدردشة</span>
+      </button>
+
+      <button class="nav-item" onclick="navigateTo('createPostPage')">
+        <span class="icon">➕</span>
+        <span>نشر</span>
+      </button>
+
+      <button class="nav-item" onclick="openMyProfile()">
+        <span class="icon">👤</span>
+        <span>حسابي</span>
+      </button>
+    </nav>
   </div>
 
+  <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-    import { getDatabase, ref, push, set, onValue, off, query, orderByChild, limitToLast, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+    import { getDatabase, ref, push, set, onValue, off, onDisconnect, query, orderByChild, equalTo, limitToLast } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCi8tBwbrQ2N3HPK266BnyLBbNIBZ1ggsg",
@@ -361,160 +332,226 @@
 
     const $ = (id) => document.getElementById(id);
 
-    const authScreen = $("authScreen");
-    const appArea = $("appArea");
-    const loginBtn = $("googleLoginBtn");
-    const logoutBtn = $("logoutBtn");
-    const authError = $("authError");
-    const homePage = $("homePage");
-    const subjectView = $("subjectView");
-    const subjectTitle = $("subjectTitle");
-    const chatMessages = $("chatMessages");
-    const userAvatar = $("userAvatar");
-
-    const EMOJIS = ["👍", "😂", "😮", "😢", "🚩"];
     let currentUser = null;
-    let currentRoom = null;
-    let activeMessageId = null;
-    let messagesCache = {}, reactionsCache = {};
-    let stopMessages = null, stopReactions = null;
+    let selectedSubjectKey = '';
 
-    function renderMessages() {
-      chatMessages.innerHTML = '';
-      const ids = Object.keys(messagesCache);
+    // التنقل بين الصفحات
+    window.navigateTo = function(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      $(pageId).classList.add('active');
 
-      if (ids.length === 0) {
-        chatMessages.innerHTML = '<p class="empty">لا توجد رسائل بعد. كن أول من يشارك! 💬</p>';
-        return;
-      }
+      if (pageId === 'subjectsPage') document.querySelectorAll('.nav-item')[0].classList.add('active');
+      if (pageId === 'chatPage') document.querySelectorAll('.nav-item')[1].classList.add('active');
+      if (pageId === 'createPostPage') document.querySelectorAll('.nav-item')[2].classList.add('active');
+      if (pageId === 'profilePage') document.querySelectorAll('.nav-item')[3].classList.add('active');
+    };
 
-      ids.forEach((id) => {
-        const msg = messagesCache[id];
-        const isMe = currentUser && msg.uid === currentUser.uid;
-        
-        const row = document.createElement("div");
-        row.className = `message-row ${isMe ? 'mine' : ''}`;
-
-        const reactions = reactionsCache[id] || {};
-        let reactionBadges = '';
-        Object.values(reactions).forEach(e => {
-          if (EMOJIS.includes(e)) reactionBadges += ` ${e}`;
-        });
-
-        row.innerHTML = `
-          <img class="msg-avatar" src="${msg.photo || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'}" alt="">
-          <div class="message ${isMe ? 'mine' : ''}">
-            <span class="message-author">${isMe ? 'أنت' : (msg.sender || 'طالب')}</span>
-            <div class="message-text">${msg.text}</div>
-            ${reactionBadges ? `<div class="reactions"><span class="reaction-btn">${reactionBadges}</span></div>` : ''}
-          </div>
-        `;
-
-        row.addEventListener('click', () => openPicker(id));
-        chatMessages.appendChild(row);
-      });
-
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function openPicker(id) {
-      activeMessageId = id;
-      $("reactionModal").style.display = "flex";
-    }
-
-    window.closePicker = function() {
-      $("reactionModal").style.display = "none";
-    }
-
-    window.confirmEmoji = async function(emoji) {
-      if (activeMessageId && currentUser && currentRoom) {
-        const target = ref(db, `rooms/${currentRoom}/reactions/${activeMessageId}/${currentUser.uid}`);
-        await set(target, emoji);
-      }
-      closePicker();
-    }
-
-    function openSubject(room, title) {
-      currentRoom = room;
-      subjectTitle.textContent = title;
-      homePage.classList.add("hidden");
-      subjectView.classList.remove("hidden");
-
-      if (stopMessages) stopMessages();
-      if (stopReactions) stopReactions();
-
-      const q = query(ref(db, `rooms/${room}/messages`), orderByChild("timestamp"), limitToLast(100));
-      stopMessages = onValue(q, (snap) => {
-        messagesCache = snap.val() || {};
-        renderMessages();
-      });
-
-      stopReactions = onValue(ref(db, `rooms/${room}/reactions`), (snap) => {
-        reactionsCache = snap.val() || {};
-        renderMessages();
-      });
-    }
-
-    function showHome() {
-      subjectView.classList.add("hidden");
-      homePage.classList.remove("hidden");
-      if (stopMessages) stopMessages();
-    }
-
-    $("chatForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const input = $("userInput");
-      const text = input.value.trim();
-      if (!text || !currentUser) return;
-
-      await push(ref(db, `rooms/${currentRoom}/messages`), {
-        uid: currentUser.uid,
-        sender: currentUser.displayName || "طالب",
-        photo: currentUser.photoURL || "",
-        text,
-        timestamp: serverTimestamp()
-      });
-
-      input.value = "";
-    });
-
-    // آلية تسجيل الدخول الذكية للحل المباشر للمشكلة
-    loginBtn.addEventListener("click", async () => {
-      loginBtn.disabled = true;
-      authError.textContent = "";
-
+    // تسجيل الدخول
+    $("googleLoginBtn").addEventListener("click", async () => {
       try {
         await signInWithPopup(auth, provider);
-      } catch (err) {
-        console.warn("Popup blocked, trying redirect...", err);
-        try {
-          await signInWithRedirect(auth, provider);
-        } catch (redirErr) {
-          authError.textContent = "خطأ في الاتصال، أعد المحاولة.";
-          loginBtn.disabled = false;
-        }
+      } catch (e) {
+        signInWithRedirect(auth, provider);
       }
     });
 
-    logoutBtn.addEventListener("click", () => signOut(auth));
-    $("backBtn").addEventListener("click", showHome);
-
-    document.querySelectorAll("[data-room]").forEach((btn) => {
-      btn.addEventListener("click", () => openSubject(btn.dataset.room, btn.dataset.title));
-    });
-
-    getRedirectResult(auth).catch(() => {});
+    $("logoutBtn").addEventListener("click", () => signOut(auth));
 
     onAuthStateChanged(auth, (user) => {
-      currentUser = user;
-      loginBtn.disabled = false;
       if (user) {
-        authScreen.classList.add("hidden");
-        appArea.classList.remove("hidden");
-        userAvatar.src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
+        currentUser = user;
+        $("authScreen").style.display = "none";
+        $("appArea").style.display = "flex";
+        
+        $("headerUserAvatar").src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
+        setupPresence(user.uid);
+        listenGlobalChat();
       } else {
-        authScreen.classList.remove("hidden");
-        appArea.classList.add("hidden");
+        currentUser = null;
+        $("authScreen").style.display = "grid";
+        $("appArea").style.display = "none";
+      }
+    });
+
+    function setupPresence(uid) {
+      const pRef = ref(db, 'presence/' + uid);
+      set(pRef, true);
+      onDisconnect(pRef).remove();
+      onValue(ref(db, 'presence'), (snap) => {
+        const count = snap.val() ? Object.keys(snap.val()).length : 1;
+        $("onlineCounter").innerText = count;
+      });
+    }
+
+    // فتح منشورات مادة معينة
+    window.openSubjectView = function(key, title) {
+      selectedSubjectKey = key;
+      $("currentSubjectTitle").innerText = "منشورات مادة " + title;
+      navigateTo('subjectPostsPage');
+
+      onValue(ref(db, `posts/${key}`), (snap) => {
+        const container = $("subjectPostsContainer");
+        container.innerHTML = '';
+        const data = snap.val();
+        if (data) {
+          Object.values(data).reverse().forEach(post => {
+            container.appendChild(createPostCard(post));
+          });
+        } else {
+          container.innerHTML = '<p style="color:var(--muted); font-size:0.85rem;">لا توجد منشورات في هاته المادة بعد. كن أول من ينشر!</p>';
+        }
+      });
+    };
+
+    // إنشاء بطاقة منشور
+    function createPostCard(post) {
+      const card = document.createElement('div');
+      card.className = 'post-card';
+      
+      const imgHTML = post.imgUrl ? `<img class="post-image" src="${post.imgUrl}" alt="مرفق">` : '';
+      const linkHTML = post.linkUrl ? `<a class="post-link" href="${post.linkUrl}" target="_blank">🔗 فتح الرابط المرفق</a>` : '';
+
+      card.innerHTML = `
+        <div class="post-header" onclick="openUserProfile('${post.uid}', '${post.authorName}', '${post.authorPhoto}')">
+          <img class="post-author-img" src="${post.authorPhoto || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'}">
+          <span class="post-author-name">${post.authorName || 'طالب'}</span>
+        </div>
+        <div class="post-title">${post.title}</div>
+        <div class="post-body selectable">${post.content}</div>
+        ${imgHTML}
+        ${linkHTML}
+      `;
+      return card;
+    }
+
+    // إضافة منشور جديد
+    $("postForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+
+      const subject = $("postSubjectSelect").value;
+      const title = $("postTitleInput").value.trim();
+      const content = $("postContentInput").value.trim();
+      const imgUrl = $("postImgInput").value.trim();
+      const linkUrl = $("postLinkInput").value.trim();
+
+      const postData = {
+        uid: currentUser.uid,
+        authorName: currentUser.displayName || "طالب",
+        authorPhoto: currentUser.photoURL || "",
+        title, content, imgUrl, linkUrl,
+        timestamp: Date.now()
+      };
+
+      // حفظ المنشور تحت المادة + تحت حساب المستخدم
+      await push(ref(db, `posts/${subject}`), postData);
+      await push(ref(db, `user_posts/${currentUser.uid}`), postData);
+
+      alert("تم نشر ملخصك بنجاح!");
+      $("postForm").reset();
+      navigateTo('subjectsPage');
+    });
+
+    // الدردشة العامة
+    function listenGlobalChat() {
+      onValue(ref(db, 'global_chat'), (snap) => {
+        const chatBox = $("chatMessages");
+        chatBox.innerHTML = '';
+        const data = snap.val();
+        if (data) {
+          Object.values(data).forEach(msg => {
+            const isMe = currentUser && msg.uid === currentUser.uid;
+            const row = document.createElement('div');
+            row.className = `msg-row ${isMe ? 'mine' : 'other'}`;
+            row.innerHTML = `
+              <img class="msg-avatar" src="${msg.photo || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'}" onclick="openUserProfile('${msg.uid}', '${msg.sender}', '${msg.photo}')">
+              <div class="msg-box">
+                <span class="msg-author" onclick="openUserProfile('${msg.uid}', '${msg.sender}', '${msg.photo}')">${isMe ? 'أنت' : msg.sender}</span>
+                <span class="selectable">${msg.text}</span>
+              </div>
+            `;
+            chatBox.appendChild(row);
+          });
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      });
+    }
+
+    $("sendBtn").addEventListener("click", sendChatMessage);
+    $("userInput").addEventListener("keypress", (e) => { if (e.key === 'Enter') sendChatMessage(); });
+
+    async function sendChatMessage() {
+      const text = $("userInput").value.trim();
+      if (text && currentUser) {
+        await push(ref(db, 'global_chat'), {
+          uid: currentUser.uid,
+          sender: currentUser.displayName || "طالب",
+          photo: currentUser.photoURL || "",
+          text,
+          timestamp: Date.now()
+        });
+        $("userInput").value = '';
+      }
+    }
+
+    // فتح حسابي الشخصي
+    window.openMyProfile = function() {
+      if (!currentUser) return;
+      openUserProfile(currentUser.uid, currentUser.displayName, currentUser.photoURL);
+    };
+
+    // فتح صفحة بروفايل أي طالب (أنا أو زميل)
+    window.openUserProfile = function(uid, name, photo) {
+      const isMyProfile = currentUser && currentUser.uid === uid;
+      
+      $("profileNameText").innerText = name || "طالب";
+      $("profileAvatarImg").src = photo || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
+      
+      if (isMyProfile) {
+        $("editNameInput").value = currentUser.displayName || "";
+        $("editAvatarInput").value = currentUser.photoURL || "";
+        $("saveProfileBtn").style.display = "block";
+        $("userPostsHeading").innerText = "📝 منشوراتي وملخصاتي:";
+      } else {
+        $("saveProfileBtn").style.display = "none";
+        $("userPostsHeading").innerText = `📝 منشورات الطالب (${name}):`;
+      }
+
+      navigateTo('profilePage');
+
+      // جلب منشورات هاد الطالب
+      onValue(ref(db, `user_posts/${uid}`), (snap) => {
+        const container = $("userPostsContainer");
+        container.innerHTML = '';
+        const data = snap.val();
+        if (data) {
+          Object.values(data).reverse().forEach(post => {
+            container.appendChild(createPostCard(post));
+          });
+        } else {
+          container.innerHTML = '<p style="color:var(--muted); font-size:0.85rem;">لا توجد منشورات لهذا الطالب بعد.</p>';
+        }
+      });
+    };
+
+    // حفظ تعديلات البروفايل
+    $("saveProfileBtn").addEventListener("click", async () => {
+      if (!currentUser) return;
+      const newName = $("editNameInput").value.trim();
+      const newAvatar = $("editAvatarInput").value.trim();
+
+      try {
+        await updateProfile(currentUser, {
+          displayName: newName || currentUser.displayName,
+          photoURL: newAvatar || currentUser.photoURL
+        });
+        $("headerUserAvatar").src = currentUser.photoURL;
+        $("profileAvatarImg").src = currentUser.photoURL;
+        $("profileNameText").innerText = currentUser.displayName;
+        alert("تم حفظ تعديلات الحساب بنجاح!");
+      } catch (e) {
+        alert("خطأ في تحديث البيانات: " + e.message);
       }
     });
   </script>
