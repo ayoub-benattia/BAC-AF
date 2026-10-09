@@ -3,41 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ملتقى الفلسفة والآداب - باك</title>
+    <title>ملتقى الآداب والفلسفة - B4C</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f6f9; color: #333; display: flex; flex-direction: column; height: 100vh; }
-        header { background-color: #1e293b; color: #fff; padding: 15px 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        body { background-color: #0f172a; color: #f8fafc; display: flex; flex-direction: column; height: 100vh; }
+        header { background-color: #1e293b; color: #38bdf8; padding: 15px 20px; text-align: center; border-bottom: 1px solid #334155; }
+        
         .main-container { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 250px; background-color: #0f172a; color: #fff; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .chat-area { flex: 1; display: flex; flex-direction: column; background-color: #ffffff; }
-        .messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg { background: #e2e8f0; padding: 10px 14px; border-radius: 12px; max-width: 75%; width: fit-content; word-break: break-word; }
-        .input-area { padding: 15px; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; }
-        input[type="text"] { flex: 1; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; }
-        button { padding: 12px 24px; background-color: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        .sidebar { width: 250px; background-color: #1e293b; color: #cbd5e1; padding: 20px; display: flex; flex-direction: column; gap: 15px; border-left: 1px solid #334155; }
+        .sidebar h3 { color: #f8fafc; font-size: 1.1rem; }
+        .user-box { background: #334155; padding: 10px; border-radius: 8px; font-size: 0.9rem; }
+        .user-box input { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: none; outline: none; background: #0f172a; color: #fff; }
+
+        .chat-area { flex: 1; display: flex; flex-direction: column; background-color: #0f172a; }
+        .messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        
+        /* شكل الرسائل */
+        .msg-box { display: flex; flex-direction: column; max-width: 75%; width: fit-content; padding: 10px 14px; border-radius: 12px; word-break: break-word; }
+        .msg-other { background-color: #1e293b; color: #f8fafc; align-self: flex-start; border-bottom-right-radius: 2px; }
+        .msg-me { background-color: #2563eb; color: #ffffff; align-self: flex-end; border-bottom-left-radius: 2px; }
+        
+        .msg-sender { font-size: 0.75rem; font-weight: bold; margin-bottom: 4px; color: #38bdf8; }
+        .msg-me .msg-sender { color: #93c5fd; }
+        .msg-text { font-size: 0.95rem; line-height: 1.4; }
+        .msg-time { font-size: 0.65rem; opacity: 0.7; align-self: flex-end; margin-top: 4px; }
+
+        .input-area { padding: 15px; background-color: #1e293b; border-top: 1px solid #334155; display: flex; gap: 10px; }
+        input[type="text"]#userInput { flex: 1; padding: 12px; border: 1px solid #334155; background-color: #0f172a; color: #fff; border-radius: 8px; outline: none; }
+        input[type="text"]#userInput:focus { border-color: #2563eb; }
+        button { padding: 12px 24px; background-color: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         button:hover { background-color: #1d4ed8; }
-        @media (max-width: 768px) { .sidebar { display: none; } }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .msg-box { max-width: 88%; }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h2>فضاء الآداب والفلسفة - B4C</h2>
+        <h2>📜 ملتقى الآداب والفلسفة - باك</h2>
     </header>
 
     <div class="main-container">
         <div class="sidebar">
-            <h3>الغرف</h3>
+            <div class="user-box">
+                <label for="usernameInput">اسمك في الدردشة:</label>
+                <input type="text" id="usernameInput" value="طالب فلسفة" placeholder="اكتب اسمك...">
+            </div>
+            <h3>الأقسام</h3>
             <p>💬 الدردشة العامة</p>
-            <p>📜 مقالات الفلسفة</p>
         </div>
+
         <div class="chat-area">
             <div class="messages" id="messages">
-                <div class="msg"><b>النظام:</b> مرحباً بكم! متصل بقاعدة البيانات...</div>
+                <div class="msg-box msg-other">
+                    <span class="msg-sender">النظام</span>
+                    <span class="msg-text">مرحباً بك في مجتمع الآداب والفلسفة!</span>
+                </div>
             </div>
             <div class="input-area">
-                <input type="text" id="userInput" placeholder="اكتب مشاركتك الفلسفية هنا...">
+                <input type="text" id="userInput" placeholder="اكتب فكرتك أو استفسارك الفلسفي...">
                 <button id="sendBtn">إرسال</button>
             </div>
         </div>
@@ -59,28 +87,38 @@
         measurementId: "G-SMW8DZY8EX"
       };
 
-      // Initialize Firebase & Realtime Database
       const app = initializeApp(firebaseConfig);
       const db = getDatabase(app);
       const messagesRef = ref(db, 'messages');
 
       const messagesContainer = document.getElementById('messages');
       const userInput = document.getElementById('userInput');
+      const usernameInput = document.getElementById('usernameInput');
       const sendBtn = document.getElementById('sendBtn');
 
-      // 1. استقبال الرسائل اللحظية (Realtime)
+      // معرّف عشوائي للجهاز الحالي لمعرفة الرسائل الخاصة بي
+      const myClientId = 'user_' + Math.random().toString(36).substr(2, 9);
+
+      // 1. استقبال الرسائل اللحظية
       onValue(messagesRef, (snapshot) => {
           messagesContainer.innerHTML = '';
           const data = snapshot.val();
           if (data) {
               Object.values(data).forEach((msg) => {
+                  const isMe = msg.clientId === myClientId;
                   const div = document.createElement('div');
-                  div.className = 'msg';
-                  div.innerHTML = `<b>طالب:</b> ${msg.text}`;
+                  div.className = `msg-box ${isMe ? 'msg-me' : 'msg-other'}`;
+                  
+                  const date = new Date(msg.timestamp || Date.now());
+                  const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                  div.innerHTML = `
+                      <span class="msg-sender">${isMe ? 'أنت' : (msg.sender || 'طالب')}</span>
+                      <span class="msg-text">${msg.text}</span>
+                      <span class="msg-time">${timeStr}</span>
+                  `;
                   messagesContainer.appendChild(div);
               });
-          } else {
-              messagesContainer.innerHTML = '<div class="msg"><b>النظام:</b> لا توجد رسائل بعد، أرسل أول رسالة!</div>';
           }
           messagesContainer.scrollTop = messagesContainer.scrollHeight;
       });
@@ -88,9 +126,12 @@
       // 2. إرسال الرسالة
       function sendMessage() {
           const text = userInput.value.trim();
+          const senderName = usernameInput.value.trim() || "طالب فلسفة";
           if (text !== '') {
               push(messagesRef, {
+                  sender: senderName,
                   text: text,
+                  clientId: myClientId,
                   timestamp: Date.now()
               });
               userInput.value = '';
