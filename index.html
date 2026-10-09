@@ -13,7 +13,6 @@
       --surface: #151f32;
       --surface2: #1e293b;
       --accent: #38bdf8;
-      --accent-hover: #0284c7;
       --text: #f8fafc;
       --muted: #94a3b8;
       --border: #334155;
@@ -70,7 +69,6 @@
     .post-header { display: flex; align-items: center; gap: 10px; cursor: pointer; }
     .post-author-img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
     .post-author-name { font-size: 0.85rem; font-weight: bold; color: var(--text); }
-    .post-subject-badge { font-size: 0.72rem; color: var(--accent); background: rgba(56, 189, 248, 0.1); padding: 2px 8px; border-radius: 10px; margin-right: auto; }
     .post-title { font-size: 1rem; font-weight: bold; color: var(--accent); }
     .post-body { font-size: 0.88rem; color: var(--text); line-height: 1.5; white-space: pre-wrap; }
     .post-image { width: 100%; max-height: 350px; border-radius: 12px; object-fit: cover; margin-top: 6px; }
@@ -126,7 +124,7 @@
     <header>
       <span class="online-count">🟢 <span id="onlineCounter">1</span> متصل</span>
       <div class="user-nav">
-        <img id="headerUserAvatar" class="user-avatar-header" src="" alt="بروفايلي" onclick="navigateTo('profilePage')">
+        <img id="headerUserAvatar" class="user-avatar-header" src="" alt="بروفايلي" onclick="openMyProfile()">
       </div>
     </header>
 
@@ -202,7 +200,19 @@
         <div class="posts-list" id="subjectPostsContainer"></div>
       </section>
 
-      <!-- 2. صفحة الدردشة العامة -->
+      <!-- 2. صفحة البحث الشامل -->
+      <section id="searchPage" class="page">
+        <div class="page-title">🔍 البحث في المنشورات والدروس</div>
+        <div class="page-desc">ابحث في كافة الدروس والملخصات لجميع المواد.</div>
+
+        <div class="form-group">
+          <input type="text" id="globalSearchInput" class="form-control selectable" placeholder="ابحث باسم الدرس، المقالة، أو الكلمة المفتاحية..." oninput="executeGlobalSearch()">
+        </div>
+
+        <div class="posts-list" id="searchResultsContainer" style="margin-top:10px;"></div>
+      </section>
+
+      <!-- 3. صفحة الدردشة العامة -->
       <section id="chatPage" class="page">
         <div class="page-title">💬 الدردشة العامة</div>
         <div class="chat-container">
@@ -214,7 +224,7 @@
         </div>
       </section>
 
-      <!-- 3. صفحة النشر الجديدة -->
+      <!-- 4. صفحة النشر الجديدة -->
       <section id="createPostPage" class="page">
         <div class="page-title">➕ إضافة منشور أو ملخص</div>
         <div class="page-desc">شارِك زملائك ملخصاً، درساً، أو فائدة دراسية.</div>
@@ -257,24 +267,22 @@
         </form>
       </section>
 
-      <!-- 4. صفحة البروفايل والملف الشخصي -->
+      <!-- 5. صفحة البروفايل والملف الشخصي -->
       <section id="profilePage" class="page">
         <button class="back-btn" onclick="navigateTo('subjectsPage')">← العودة</button>
         <div class="profile-card">
           <img id="profileAvatarImg" class="profile-img-large" src="" alt="الصورة الشخصية">
           <h2 id="profileNameText">اسم الطالب</h2>
-          <button class="btn-logout" id="logoutBtn">تسجيل الخروج</button>
+          <!-- زر تسجيل الخروج يظهر فقط إذا كنت تصفح حسابك الخاص -->
+          <button class="btn-logout" id="logoutBtn" style="display:none;">تسجيل الخروج</button>
         </div>
 
-        <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-top:14px;">
-          <h4 style="margin-bottom:12px; color:var(--accent);">⚙️ تعديل بيانات الحساب:</h4>
-          <div class="form-group" style="margin-bottom:10px;">
-            <label>الاسم الكامل:</label>
-            <input type="text" id="editNameInput" class="form-control selectable">
-          </div>
+        <!-- صندوق تعديل الاسم يظهر فقط في حسابك الخاص -->
+        <div id="editProfileSection" style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-top:14px; display:none;">
+          <h4 style="margin-bottom:12px; color:var(--accent);">⚙️ تعديل اسم الحساب:</h4>
           <div class="form-group" style="margin-bottom:14px;">
-            <label>رابط الصورة الشخصية (URL):</label>
-            <input type="url" id="editAvatarInput" class="form-control selectable">
+            <label>الاسم الجديد:</label>
+            <input type="text" id="editNameInput" class="form-control selectable">
           </div>
           <button id="saveProfileBtn" class="btn-submit" style="width:100%;">حفظ التعديلات</button>
         </div>
@@ -289,6 +297,11 @@
       <button class="nav-item active" onclick="navigateTo('subjectsPage')">
         <span class="icon">📚</span>
         <span>المواد</span>
+      </button>
+
+      <button class="nav-item" onclick="navigateTo('searchPage')">
+        <span class="icon">🔍</span>
+        <span>البحث</span>
       </button>
 
       <button class="nav-item" onclick="navigateTo('chatPage')">
@@ -312,7 +325,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-    import { getDatabase, ref, push, set, onValue, off, onDisconnect, query, orderByChild, equalTo, limitToLast } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+    import { getDatabase, ref, push, set, update, onValue, off, onDisconnect } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCi8tBwbrQ2N3HPK266BnyLBbNIBZ1ggsg",
@@ -333,7 +346,7 @@
     const $ = (id) => document.getElementById(id);
 
     let currentUser = null;
-    let selectedSubjectKey = '';
+    let usersDataCache = {}; // كاش لحفظ أسماء وصور الحسابات المحدثة حياً
 
     // التنقل بين الصفحات
     window.navigateTo = function(pageId) {
@@ -342,9 +355,10 @@
       $(pageId).classList.add('active');
 
       if (pageId === 'subjectsPage') document.querySelectorAll('.nav-item')[0].classList.add('active');
-      if (pageId === 'chatPage') document.querySelectorAll('.nav-item')[1].classList.add('active');
-      if (pageId === 'createPostPage') document.querySelectorAll('.nav-item')[2].classList.add('active');
-      if (pageId === 'profilePage') document.querySelectorAll('.nav-item')[3].classList.add('active');
+      if (pageId === 'searchPage') document.querySelectorAll('.nav-item')[1].classList.add('active');
+      if (pageId === 'chatPage') document.querySelectorAll('.nav-item')[2].classList.add('active');
+      if (pageId === 'createPostPage') document.querySelectorAll('.nav-item')[3].classList.add('active');
+      if (pageId === 'profilePage') document.querySelectorAll('.nav-item')[4].classList.add('active');
     };
 
     // تسجيل الدخول
@@ -365,14 +379,32 @@
         $("appArea").style.display = "flex";
         
         $("headerUserAvatar").src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
+        
+        // حفظ/تحديث سجل الحساب المباشر في قاعدة البيانات
+        syncUserData(user.uid, user.displayName, user.photoURL);
         setupPresence(user.uid);
         listenGlobalChat();
+        listenAllUsers();
       } else {
         currentUser = null;
         $("authScreen").style.display = "grid";
         $("appArea").style.display = "none";
       }
     });
+
+    function syncUserData(uid, name, photo) {
+      set(ref(db, `users/${uid}`), {
+        name: name || "طالب",
+        photo: photo || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+      });
+    }
+
+    // الاستماع الحياتي لكافة المستخدمين لتحديث أسمائهم وصورهم تلقائياً عبر كل المنشورات والشات
+    function listenAllUsers() {
+      onValue(ref(db, 'users'), (snap) => {
+        usersDataCache = snap.val() || {};
+      });
+    }
 
     function setupPresence(uid) {
       const pRef = ref(db, 'presence/' + uid);
@@ -386,7 +418,6 @@
 
     // فتح منشورات مادة معينة
     window.openSubjectView = function(key, title) {
-      selectedSubjectKey = key;
       $("currentSubjectTitle").innerText = "منشورات مادة " + title;
       navigateTo('subjectPostsPage');
 
@@ -404,18 +435,50 @@
       });
     };
 
-    // إنشاء بطاقة منشور
+    // البحث الشامل في كافة المواد والمنشورات
+    window.executeGlobalSearch = function() {
+      const queryText = $("globalSearchInput").value.trim().toLowerCase();
+      const container = $("searchResultsContainer");
+      container.innerHTML = '';
+
+      if (queryText === '') return;
+
+      onValue(ref(db, 'all_posts'), (snap) => {
+        const data = snap.val();
+        if (data) {
+          const results = Object.values(data).filter(p => 
+            (p.title && p.title.toLowerCase().includes(queryText)) || 
+            (p.content && p.content.toLowerCase().includes(queryText))
+          );
+
+          if (results.length > 0) {
+            results.reverse().forEach(post => {
+              container.appendChild(createPostCard(post));
+            });
+          } else {
+            container.innerHTML = '<p style="color:var(--muted); font-size:0.85rem;">لا توجد نتائج مطابقة للبحث.</p>';
+          }
+        }
+      }, { onlyOnce: true });
+    };
+
+    // إنشاء بطاقة منشور ديناميكية تربط دائماً بأحدث اسم وصورة من البروفايل
     function createPostCard(post) {
       const card = document.createElement('div');
       card.className = 'post-card';
       
+      // جلب الاسم والصورة الحالية فوراً من الكاش أو الاستعانة بالافتراضي
+      const liveUser = usersDataCache[post.uid] || {};
+      const authorName = liveUser.name || post.authorName || 'طالب';
+      const authorPhoto = liveUser.photo || post.authorPhoto || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg';
+
       const imgHTML = post.imgUrl ? `<img class="post-image" src="${post.imgUrl}" alt="مرفق">` : '';
       const linkHTML = post.linkUrl ? `<a class="post-link" href="${post.linkUrl}" target="_blank">🔗 فتح الرابط المرفق</a>` : '';
 
       card.innerHTML = `
-        <div class="post-header" onclick="openUserProfile('${post.uid}', '${post.authorName}', '${post.authorPhoto}')">
-          <img class="post-author-img" src="${post.authorPhoto || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'}">
-          <span class="post-author-name">${post.authorName || 'طالب'}</span>
+        <div class="post-header" onclick="openUserProfile('${post.uid}')">
+          <img class="post-author-img" src="${authorPhoto}">
+          <span class="post-author-name">${authorName}</span>
         </div>
         <div class="post-title">${post.title}</div>
         <div class="post-body selectable">${post.content}</div>
@@ -436,17 +499,19 @@
       const imgUrl = $("postImgInput").value.trim();
       const linkUrl = $("postLinkInput").value.trim();
 
+      const liveUser = usersDataCache[currentUser.uid] || {};
+
       const postData = {
         uid: currentUser.uid,
-        authorName: currentUser.displayName || "طالب",
-        authorPhoto: currentUser.photoURL || "",
+        authorName: liveUser.name || currentUser.displayName || "طالب",
+        authorPhoto: liveUser.photo || currentUser.photoURL || "",
         title, content, imgUrl, linkUrl,
         timestamp: Date.now()
       };
 
-      // حفظ المنشور تحت المادة + تحت حساب المستخدم
       await push(ref(db, `posts/${subject}`), postData);
       await push(ref(db, `user_posts/${currentUser.uid}`), postData);
+      await push(ref(db, `all_posts`), postData); // للبحث الشامل السريع
 
       alert("تم نشر ملخصك بنجاح!");
       $("postForm").reset();
@@ -462,12 +527,16 @@
         if (data) {
           Object.values(data).forEach(msg => {
             const isMe = currentUser && msg.uid === currentUser.uid;
+            const liveUser = usersDataCache[msg.uid] || {};
+            const senderName = liveUser.name || msg.sender || 'طالب';
+            const senderPhoto = liveUser.photo || msg.photo || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg';
+
             const row = document.createElement('div');
             row.className = `msg-row ${isMe ? 'mine' : 'other'}`;
             row.innerHTML = `
-              <img class="msg-avatar" src="${msg.photo || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'}" onclick="openUserProfile('${msg.uid}', '${msg.sender}', '${msg.photo}')">
+              <img class="msg-avatar" src="${senderPhoto}" onclick="openUserProfile('${msg.uid}')">
               <div class="msg-box">
-                <span class="msg-author" onclick="openUserProfile('${msg.uid}', '${msg.sender}', '${msg.photo}')">${isMe ? 'أنت' : msg.sender}</span>
+                <span class="msg-author" onclick="openUserProfile('${msg.uid}')">${isMe ? 'أنت' : senderName}</span>
                 <span class="selectable">${msg.text}</span>
               </div>
             `;
@@ -484,10 +553,11 @@
     async function sendChatMessage() {
       const text = $("userInput").value.trim();
       if (text && currentUser) {
+        const liveUser = usersDataCache[currentUser.uid] || {};
         await push(ref(db, 'global_chat'), {
           uid: currentUser.uid,
-          sender: currentUser.displayName || "طالب",
-          photo: currentUser.photoURL || "",
+          sender: liveUser.name || currentUser.displayName || "طالب",
+          photo: liveUser.photo || currentUser.photoURL || "",
           text,
           timestamp: Date.now()
         });
@@ -495,33 +565,42 @@
       }
     }
 
-    // فتح حسابي الشخصي
+    // فتح حسابي الشخصي المباشر
     window.openMyProfile = function() {
       if (!currentUser) return;
-      openUserProfile(currentUser.uid, currentUser.displayName, currentUser.photoURL);
+      openUserProfile(currentUser.uid);
     };
 
-    // فتح صفحة بروفايل أي طالب (أنا أو زميل)
-    window.openUserProfile = function(uid, name, photo) {
-      const isMyProfile = currentUser && currentUser.uid === uid;
+    // فتح صفحة البروفايل لأي طالب بناءً على UID فقط
+    window.openUserProfile = function(targetUid) {
+      if (!targetUid) return;
+      const isMyProfile = currentUser && currentUser.uid === targetUid;
       
-      $("profileNameText").innerText = name || "طالب";
-      $("profileAvatarImg").src = photo || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
-      
-      if (isMyProfile) {
-        $("editNameInput").value = currentUser.displayName || "";
-        $("editAvatarInput").value = currentUser.photoURL || "";
-        $("saveProfileBtn").style.display = "block";
-        $("userPostsHeading").innerText = "📝 منشوراتي وملخصاتي:";
-      } else {
-        $("saveProfileBtn").style.display = "none";
-        $("userPostsHeading").innerText = `📝 منشورات الطالب (${name}):`;
-      }
+      // جلب اسم وصورة الطالب المحدثة فوراً
+      onValue(ref(db, `users/${targetUid}`), (snap) => {
+        const userData = snap.val() || {};
+        const displayName = userData.name || "طالب";
+        const displayPhoto = userData.photo || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
 
-      navigateTo('profilePage');
+        $("profileNameText").innerText = displayName;
+        $("profileAvatarImg").src = displayPhoto;
 
-      // جلب منشورات هاد الطالب
-      onValue(ref(db, `user_posts/${uid}`), (snap) => {
+        if (isMyProfile) {
+          $("editNameInput").value = displayName;
+          $("editProfileSection").style.display = "block";
+          $("logoutBtn").style.display = "inline-block";
+          $("userPostsHeading").innerText = "📝 منشوراتي وملخصاتي:";
+        } else {
+          $("editProfileSection").style.display = "none";
+          $("logoutBtn").style.display = "none";
+          $("userPostsHeading").innerText = `📝 منشورات الطالب (${displayName}):`;
+        }
+
+        navigateTo('profilePage');
+      }, { onlyOnce: true });
+
+      // جلب منشورات هذا الطالب بالتحديد
+      onValue(ref(db, `user_posts/${targetUid}`), (snap) => {
         const container = $("userPostsContainer");
         container.innerHTML = '';
         const data = snap.val();
@@ -535,23 +614,26 @@
       });
     };
 
-    // حفظ تعديلات البروفايل
+    // حفظ تعديل الاسم وتأثيث التحديث فوراً في كل الأماكن
     $("saveProfileBtn").addEventListener("click", async () => {
       if (!currentUser) return;
       const newName = $("editNameInput").value.trim();
-      const newAvatar = $("editAvatarInput").value.trim();
+
+      if (!newName) {
+        alert("يرجى كتابة اسم صحيح.");
+        return;
+      }
 
       try {
-        await updateProfile(currentUser, {
-          displayName: newName || currentUser.displayName,
-          photoURL: newAvatar || currentUser.photoURL
-        });
-        $("headerUserAvatar").src = currentUser.photoURL;
-        $("profileAvatarImg").src = currentUser.photoURL;
-        $("profileNameText").innerText = currentUser.displayName;
-        alert("تم حفظ تعديلات الحساب بنجاح!");
+        await updateProfile(currentUser, { displayName: newName });
+        
+        // تحديث جدول الحسابات الفوري في السحابة
+        await update(ref(db, `users/${currentUser.uid}`), { name: newName });
+
+        alert("تم تحديث اسمك بنجاح! سيظهر اسمك الجديد فوراً على كافة منشوراتك والدردشة.");
+        openMyProfile();
       } catch (e) {
-        alert("خطأ في تحديث البيانات: " + e.message);
+        alert("خطأ في تحديث الاسم: " + e.message);
       }
     });
   </script>
