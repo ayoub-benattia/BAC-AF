@@ -3,23 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ملتقى الآداب والفلسفة - B4C</title>
+    <title>منصة الآداب والفلسفة - B4C</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0f172a; color: #f8fafc; display: flex; flex-direction: column; height: 100vh; }
+        
         header { background-color: #1e293b; color: #38bdf8; padding: 15px 20px; text-align: center; border-bottom: 1px solid #334155; }
         
         .main-container { display: flex; flex: 1; overflow: hidden; }
         
-        .sidebar { width: 250px; background-color: #1e293b; color: #cbd5e1; padding: 20px; display: flex; flex-direction: column; gap: 15px; border-left: 1px solid #334155; }
-        .sidebar h3 { color: #f8fafc; font-size: 1.1rem; }
-        .user-box { background: #334155; padding: 10px; border-radius: 8px; font-size: 0.9rem; }
+        /* الشريط الجانبي لتغيير الأقسام */
+        .sidebar { width: 260px; background-color: #1e293b; color: #cbd5e1; padding: 20px; display: flex; flex-direction: column; gap: 15px; border-left: 1px solid #334155; }
+        .sidebar h3 { color: #f8fafc; font-size: 1rem; margin-top: 10px; }
+        .user-box { background: #334155; padding: 10px; border-radius: 8px; font-size: 0.85rem; }
         .user-box input { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: none; outline: none; background: #0f172a; color: #fff; }
 
-        .chat-area { flex: 1; display: flex; flex-direction: column; background-color: #0f172a; }
-        .messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .nav-btn { padding: 10px 12px; background: #334155; color: #fff; border: none; border-radius: 6px; cursor: pointer; text-align: right; font-weight: bold; transition: 0.2s; }
+        .nav-btn:hover, .nav-btn.active { background: #2563eb; color: #fff; }
+
+        /* منطقة المحتوى والدردشة */
+        .content-area { flex: 1; display: flex; flex-direction: column; background-color: #0f172a; }
         
-        /* شكل الرسائل */
+        /* قسم الدروس والملخصات أعلى الشات */
+        .subject-lessons { background: #182234; padding: 15px; border-bottom: 1px solid #334155; max-height: 180px; overflow-y: auto; }
+        .subject-lessons h4 { color: #38bdf8; margin-bottom: 8px; font-size: 0.95rem; }
+        .lesson-card { background: #0f172a; padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; font-size: 0.85rem; border-right: 3px solid #2563eb; }
+
+        /* منطقة الرسائل */
+        .messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
         .msg-box { display: flex; flex-direction: column; max-width: 75%; width: fit-content; padding: 10px 14px; border-radius: 12px; word-break: break-word; }
         .msg-other { background-color: #1e293b; color: #f8fafc; align-self: flex-start; border-bottom-right-radius: 2px; }
         .msg-me { background-color: #2563eb; color: #ffffff; align-self: flex-end; border-bottom-left-radius: 2px; }
@@ -31,12 +42,13 @@
 
         .input-area { padding: 15px; background-color: #1e293b; border-top: 1px solid #334155; display: flex; gap: 10px; }
         input[type="text"]#userInput { flex: 1; padding: 12px; border: 1px solid #334155; background-color: #0f172a; color: #fff; border-radius: 8px; outline: none; }
-        input[type="text"]#userInput:focus { border-color: #2563eb; }
-        button { padding: 12px 24px; background-color: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        button:hover { background-color: #1d4ed8; }
+        button#sendBtn { padding: 12px 24px; background-color: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        button#sendBtn:hover { background-color: #1d4ed8; }
 
         @media (max-width: 768px) {
-            .sidebar { display: none; }
+            .main-container { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; padding: 10px; gap: 8px; flex-direction: row; overflow-x: auto; border-left: none; border-bottom: 1px solid #334155; }
+            .user-box { display: none; } /* إخفاء مربع الاسم في الهواتف المدمجة للتوفير المساحة */
             .msg-box { max-width: 88%; }
         }
     </style>
@@ -44,37 +56,51 @@
 <body>
 
     <header>
-        <h2>📜 ملتقى الآداب والفلسفة - باك</h2>
+        <h2>📜 منصة الآداب والفلسفة - B4C</h2>
     </header>
 
     <div class="main-container">
+        <!-- القائمة الجانبية للأقسام -->
         <div class="sidebar">
             <div class="user-box">
-                <label for="usernameInput">اسمك في الدردشة:</label>
-                <input type="text" id="usernameInput" value="طالب فلسفة" placeholder="اكتب اسمك...">
+                <label for="usernameInput">اسمك:</label>
+                <input type="text" id="usernameInput" placeholder="اكتب اسمك...">
             </div>
-            <h3>الأقسام</h3>
-            <p>💬 الدردشة العامة</p>
+            <h3>الأقسام التعليمية</h3>
+            <button class="nav-btn active" onclick="switchRoom('general', 'الدردشة العامة', 'مرحباً بكم في الفضاء العام للتعارف والمناقشات العامة.')">💬 الدردشة العامة</button>
+            <button class="nav-btn" onclick="switchRoom('philo', 'قسم الفلسفة', 'دروس ومقالات الفلسفة + مناقشة المادة')">🧠 قسم الفلسفة</button>
+            <button class="nav-btn" onclick="switchRoom('arabic', 'قسم الأدب العربي', 'قواعد اللغة، التلخيصات والمراجعات')">📚 الأدب العربي</button>
         </div>
 
-        <div class="chat-area">
+        <!-- منطقة المحتوى والدردشة -->
+        <div class="content-area">
+            <!-- قسم عرض الدروس والملخصات الخاصة بالمادة -->
+            <div class="subject-lessons" id="lessonsArea">
+                <h4 id="roomTitle">💬 الدردشة العامة</h4>
+                <div id="lessonsList">
+                    <p style="font-size: 0.85rem; color: #94a3b8;">مرحباً بكم في الفضاء العام للتعارف والمناقشات العامة.</p>
+                </div>
+            </div>
+
+            <!-- الدردشة الخاصة بالقسم الحالي -->
             <div class="messages" id="messages">
                 <div class="msg-box msg-other">
                     <span class="msg-sender">النظام</span>
-                    <span class="msg-text">مرحباً بك في مجتمع الآداب والفلسفة!</span>
+                    <span class="msg-text">جاري تحميل الدردشة...</span>
                 </div>
             </div>
+
             <div class="input-area">
-                <input type="text" id="userInput" placeholder="اكتب فكرتك أو استفسارك الفلسفي...">
+                <input type="text" id="userInput" placeholder="اكتب مشاركتك هنا...">
                 <button id="sendBtn">إرسال</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase Realtime Database SDK -->
+    <!-- Firebase SDK -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-      import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+      import { getDatabase, ref, push, onValue, off } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyCi8tBwbrQ2N3HPK266BnyLBbNIBZ1ggsg",
@@ -89,46 +115,85 @@
 
       const app = initializeApp(firebaseConfig);
       const db = getDatabase(app);
-      const messagesRef = ref(db, 'messages');
 
       const messagesContainer = document.getElementById('messages');
       const userInput = document.getElementById('userInput');
       const usernameInput = document.getElementById('usernameInput');
       const sendBtn = document.getElementById('sendBtn');
+      const roomTitle = document.getElementById('roomTitle');
+      const lessonsList = document.getElementById('lessonsList');
 
-      // معرّف عشوائي للجهاز الحالي لمعرفة الرسائل الخاصة بي
+      let currentRoom = 'general';
+      let currentRef = null;
       const myClientId = 'user_' + Math.random().toString(36).substr(2, 9);
 
-      // 1. استقبال الرسائل اللحظية
-      onValue(messagesRef, (snapshot) => {
-          messagesContainer.innerHTML = '';
-          const data = snapshot.val();
-          if (data) {
-              Object.values(data).forEach((msg) => {
-                  const isMe = msg.clientId === myClientId;
-                  const div = document.createElement('div');
-                  div.className = `msg-box ${isMe ? 'msg-me' : 'msg-other'}`;
-                  
-                  const date = new Date(msg.timestamp || Date.now());
-                  const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-                  div.innerHTML = `
-                      <span class="msg-sender">${isMe ? 'أنت' : (msg.sender || 'طالب')}</span>
-                      <span class="msg-text">${msg.text}</span>
-                      <span class="msg-time">${timeStr}</span>
-                  `;
-                  messagesContainer.appendChild(div);
-              });
-          }
-          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      // حفظ واسترجاع اسم الطالب
+      usernameInput.value = localStorage.getItem('bac_user_name') || 'طالب فلسفة';
+      usernameInput.addEventListener('input', () => {
+          localStorage.setItem('bac_user_name', usernameInput.value.trim());
       });
 
-      // 2. إرسال الرسالة
+      // قائمة الدروس حسب المادة
+      const lessonsData = {
+          general: '<p style="font-size: 0.85rem; color: #94a3b8;">مساحة حرة للتبادل والتعارف بين الطلاب.</p>',
+          philo: `
+            <div class="lesson-card"><b>مقالة 1:</b> إشكالية الشعور واللاشعور (مخطط جاهز)</div>
+            <div class="lesson-card"><b>مقالة 2:</b> هل الرياضيات مصدرها العقل أم التجربة؟</div>
+          `,
+          arabic: `
+            <div class="lesson-card"><b>قواعد:</b> إعراب إِذْ، إِذًا، وإِذَنْ بطريقة سريعة.</div>
+            <div class="lesson-card"><b>مراجعة:</b> أهم الصور البيانية والأناشيد المقررة.</div>
+          `
+      };
+
+      // التبديل بين الأقسام
+      window.switchRoom = function(roomKey, title, infoText) {
+          currentRoom = roomKey;
+          roomTitle.innerText = title;
+          lessonsList.innerHTML = lessonsData[roomKey] || infoText;
+
+          // تحديث الزر النشط
+          document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+          event.target.classList.add('active');
+
+          // إلغاء الاستماع للغرفة القديمة والبدء في الجديدة
+          if (currentRef) off(currentRef);
+          listenToRoom(roomKey);
+      };
+
+      function listenToRoom(room) {
+          currentRef = ref(db, 'rooms/' + room);
+          onValue(currentRef, (snapshot) => {
+              messagesContainer.innerHTML = '';
+              const data = snapshot.val();
+              if (data) {
+                  Object.values(data).forEach((msg) => {
+                      const isMe = msg.clientId === myClientId;
+                      const div = document.createElement('div');
+                      div.className = `msg-box ${isMe ? 'msg-me' : 'msg-other'}`;
+                      
+                      const date = new Date(msg.timestamp || Date.now());
+                      const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                      div.innerHTML = `
+                          <span class="msg-sender">${isMe ? 'أنت' : (msg.sender || 'طالب')}</span>
+                          <span class="msg-text">${msg.text}</span>
+                          <span class="msg-time">${timeStr}</span>
+                      `;
+                      messagesContainer.appendChild(div);
+                  });
+              } else {
+                  messagesContainer.innerHTML = '<div class="msg-box msg-other"><span class="msg-sender">النظام</span><span class="msg-text">لا توجد رسائل في هذا القسم بعد، ابدأ النقاش!</span></div>';
+              }
+              messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          });
+      }
+
       function sendMessage() {
           const text = userInput.value.trim();
           const senderName = usernameInput.value.trim() || "طالب فلسفة";
           if (text !== '') {
-              push(messagesRef, {
+              push(ref(db, 'rooms/' + currentRoom), {
                   sender: senderName,
                   text: text,
                   clientId: myClientId,
@@ -142,6 +207,9 @@
       userInput.addEventListener('keypress', (e) => {
           if (e.key === 'Enter') sendMessage();
       });
+
+      // البداية مع الغرفة العامة
+      listenToRoom('general');
     </script>
 </body>
 </html>
