@@ -21,10 +21,9 @@
       --radius: 18px;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      margin: 0;
       min-height: 100vh;
       background: var(--bg);
       color: var(--text);
@@ -39,7 +38,6 @@
     }
 
     .hidden { display: none !important; }
-
     .muted { color: var(--muted); }
     .accent { color: var(--accent); }
 
@@ -121,45 +119,25 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 13px max(16px, calc((100% - 960px) / 2));
+      padding: 12px max(16px, calc((100% - 960px) / 2));
       background: #151f32ed;
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(14px);
     }
 
-    .brand {
-      color: var(--accent);
-      font-weight: 900;
-      font-size: 1.05rem;
-    }
+    .brand { color: var(--accent); font-weight: 900; font-size: 1.05rem; }
 
-    .user-nav {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .user-name {
-      max-width: 145px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: .85rem;
-    }
-
-    .logout {
-      color: var(--danger);
-      background: #f8717114;
-      border-color: #f8717130;
-    }
+    .user-nav { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+    .logout { color: var(--danger); background: #f8717114; border-color: #f8717130; }
 
     main {
       width: min(100% - 32px, 920px);
-      margin: 26px auto;
+      margin: 20px auto;
       padding-bottom: 24px;
     }
 
-    .hero { margin-bottom: 24px; }
+    .hero { margin-bottom: 20px; }
     .hero h2 { margin-bottom: 6px; font-size: 1.55rem; }
     .hero p { margin-top: 0; color: var(--muted); }
 
@@ -173,8 +151,8 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 12px;
-      min-height: 155px;
+      gap: 10px;
+      min-height: 140px;
       padding: 20px;
       text-align: right;
       color: var(--text);
@@ -184,14 +162,10 @@
       transition: border-color .2s, transform .2s;
     }
 
-    .subject-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-
+    .subject-card:hover { border-color: var(--accent); transform: translateY(-2px); }
     .subject-icon { font-size: 1.8rem; }
     .subject-card strong { font-size: 1.05rem; }
-    .subject-card small { color: var(--muted); line-height: 1.6; }
+    .subject-card small { color: var(--muted); line-height: 1.5; }
 
     .tag {
       display: inline-block;
@@ -203,33 +177,20 @@
     }
 
     .chat-page { display: flex; flex-direction: column; gap: 14px; }
-
-    .chat-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .chat-top h2 { margin: 0; font-size: 1.25rem; }
+    .chat-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 
     .chat-box {
       display: flex;
       flex-direction: column;
-      height: min(68vh, 680px);
-      min-height: 350px;
+      height: min(72vh, 680px);
+      min-height: 380px;
       overflow: hidden;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
     }
 
-    .chat-status {
-      padding: 10px 15px;
-      color: var(--muted);
-      font-size: .8rem;
-      border-bottom: 1px solid var(--border);
-    }
+    .chat-status { padding: 10px 15px; color: var(--muted); font-size: .8rem; border-bottom: 1px solid var(--border); }
 
     .messages {
       flex: 1;
@@ -237,21 +198,17 @@
       padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       overflow-y: auto;
-      overflow-wrap: anywhere;
       overscroll-behavior: contain;
     }
 
-    .empty {
-      margin: auto;
-      color: var(--muted);
-      text-align: center;
-    }
+    .message-row { display: flex; gap: 8px; align-items: flex-start; max-width: 88%; }
+    .message-row.mine { align-self: flex-end; flex-direction: row-reverse; }
+
+    .msg-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 
     .message {
-      max-width: 86%;
-      align-self: flex-start;
       padding: 10px 13px;
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -259,107 +216,49 @@
     }
 
     .message.mine {
-      align-self: flex-end;
       background: #173b66;
       border-color: #28578a;
       border-radius: 4px 15px 15px 15px;
     }
 
-    .message-author {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--accent);
-      font-size: .75rem;
-      font-weight: 800;
-    }
+    .message-author { display: block; margin-bottom: 4px; color: var(--accent); font-size: .75rem; font-weight: 800; }
+    .message.mine .message-author { color: #bfdbfe; }
+    .message-text { white-space: pre-wrap; line-height: 1.6; user-select: text; -webkit-user-select: text; }
+    .message-time { display: block; margin-top: 6px; color: var(--muted); font-size: .68rem; }
 
-    .message-text {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      line-height: 1.65;
-      user-select: text;
-      -webkit-user-select: text;
-    }
-
-    .message-time {
-      display: block;
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: .68rem;
-    }
-
-    .reactions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      margin-top: 8px;
-    }
-
-    .reaction-btn {
-      padding: 3px 7px;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      background: #0b1120;
-      color: var(--text);
-    }
-
+    .reactions { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+    .reaction-btn { padding: 3px 8px; border: 1px solid var(--border); border-radius: 20px; background: #0b1120; color: var(--text); font-size: 0.78rem; }
     .reaction-btn.active { border-color: var(--accent); }
 
-    .composer {
-      display: flex;
-      gap: 8px;
-      padding: 12px;
-      background: var(--bg);
-      border-top: 1px solid var(--border);
-    }
+    .composer { display: flex; gap: 8px; padding: 12px; background: var(--bg); border-top: 1px solid var(--border); }
+    .composer input { width: 100%; padding: 12px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
 
-    .composer input {
-      width: 100%;
-      min-width: 0;
-      padding: 12px;
-      color: var(--text);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-    }
-
-    .composer input::placeholder { color: var(--muted); }
-
-    .counter {
-      padding: 0 14px 8px;
-      color: var(--muted);
-      font-size: .72rem;
-      text-align: left;
-    }
-
-    footer {
-      padding: 22px 16px;
-      color: var(--muted);
-      text-align: center;
-      font-size: .8rem;
-    }
+    /* Picker Popover */
+    .reaction-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 100; }
+    .reaction-box { background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 10px 18px; display: flex; gap: 14px; font-size: 1.5rem; }
+    .reaction-box span { cursor: pointer; transition: transform 0.1s; }
+    .reaction-box span:hover { transform: scale(1.3); }
 
     @media (max-width: 560px) {
-      header { padding: 12px 14px; }
-      .user-name { display: none; }
-      main { width: calc(100% - 24px); margin-top: 20px; }
       .cards { grid-template-columns: 1fr; }
-      .subject-card { min-height: 125px; }
-      .chat-box { height: 65vh; min-height: 320px; }
-      .message { max-width: 94%; }
-      .chat-top h2 { font-size: 1.05rem; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        transition: none !important;
-        scroll-behavior: auto !important;
-      }
+      .message-row { max-width: 95%; }
     }
   </style>
 </head>
 
 <body>
+
+  <!-- نافذة التفاعلات البسيطة -->
+  <div class="reaction-modal" id="reactionModal" onclick="closePicker()">
+    <div class="reaction-box" onclick="event.stopPropagation()">
+      <span onclick="confirmEmoji('👍')">👍</span>
+      <span onclick="confirmEmoji('😂')">😂</span>
+      <span onclick="confirmEmoji('😮')">😮</span>
+      <span onclick="confirmEmoji('😢')">😢</span>
+      <span onclick="confirmEmoji('🚩')">🚩</span>
+    </div>
+  </div>
+
   <section id="authScreen" class="screen">
     <div class="auth-card">
       <div class="logo" aria-hidden="true">📚</div>
@@ -377,10 +276,8 @@
     <header>
       <div class="brand">📜 B4C | بكالوريا</div>
       <div class="user-nav">
-        <span id="userName" class="user-name"></span>
-        <button id="logoutBtn" class="btn logout" type="button">
-          تسجيل الخروج
-        </button>
+        <img id="userAvatar" class="user-avatar" src="" alt="حسابي">
+        <button id="logoutBtn" class="btn logout" type="button">تسجيل الخروج</button>
       </div>
     </header>
 
@@ -429,78 +326,37 @@
         </div>
 
         <div class="chat-box">
-          <div id="chatStatus" class="chat-status" role="status">
-            جاري الاتصال...
-          </div>
-
+          <div id="chatStatus" class="chat-status" role="status">جاري الاتصال...</div>
           <div id="chatMessages" class="messages" aria-live="polite">
             <p class="empty">جاري تحميل الرسائل...</p>
           </div>
 
           <form id="chatForm" class="composer">
-            <input
-              id="userInput"
-              type="text"
-              maxlength="1000"
-              autocomplete="off"
-              placeholder="اكتب رسالتك..."
-              aria-label="نص الرسالة"
-              required
-            >
-            <button id="sendBtn" class="btn btn-primary" type="submit">
-              إرسال
-            </button>
+            <input id="userInput" type="text" maxlength="1000" autocomplete="off" placeholder="اكتب رسالتك..." aria-label="نص الرسالة" required>
+            <button id="sendBtn" class="btn btn-primary" type="submit">إرسال</button>
           </form>
-          <div id="charCounter" class="counter">0 / 1000</div>
         </div>
 
         <p id="chatError" class="error" role="alert" aria-live="polite"></p>
       </section>
     </main>
-
-    <footer>منصة B4C — بالتوفيق في البكالوريا ✨</footer>
   </div>
 
   <script type="module">
-    import { initializeApp } from
-      "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+    import { getDatabase, ref, push, set, onValue, off, query, orderByChild, limitToLast, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
-    import {
-      getAuth,
-      GoogleAuthProvider,
-      signInWithRedirect,
-      getRedirectResult,
-      onAuthStateChanged,
-      signOut
-    } from
-      "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-
-    import {
-      getDatabase,
-      ref,
-      push,
-      set,
-      onValue,
-      off,
-      query,
-      orderByChild,
-      limitToLast,
-      serverTimestamp
-    } from
-      "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
-
-    // استعمل إعدادات مشروعك الحقيقية من Firebase Console.
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCi8tBwbrQ2N3HPK266BnyLBbNIBZ1ggsg",
-  authDomain: "bac-af.firebaseapp.com",
-  databaseURL: "https://bac-af-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "bac-af",
-  storageBucket: "bac-af.firebasestorage.app",
-  messagingSenderId: "682004900162",
-  appId: "1:682004900162:web:6e74a6308b9e713dd600db",
-  measurementId: "G-SMW8DZY8EX"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyCi8tBwbrQ2N3HPK266BnyLBbNIBZ1ggsg",
+      authDomain: "bac-af.firebaseapp.com",
+      databaseURL: "https://bac-af-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "bac-af",
+      storageBucket: "bac-af.firebasestorage.app",
+      messagingSenderId: "682004900162",
+      appId: "1:682004900162:web:6e74a6308b9e713dd600db",
+      measurementId: "G-SMW8DZY8EX"
+    };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -523,435 +379,132 @@ const firebaseConfig = {
     const chatForm = $("chatForm");
     const userInput = $("userInput");
     const sendBtn = $("sendBtn");
-    const charCounter = $("charCounter");
+    const userAvatar = $("userAvatar");
 
-    const MAX_MESSAGE_LENGTH = 1000;
-    const ALLOWED_ROOMS = new Set([
-      "philo", "arabic", "history", "general"
-    ]);
     const EMOJIS = ["👍", "😂", "😮", "😢", "🚩"];
-
     let currentUser = null;
     let currentRoom = null;
-    let messagesRef = null;
-    let reactionsRef = null;
-    let messagesQuery = null;
-    let messagesCache = {};
-    let reactionsCache = {};
-    let loading = false;
-    let messagesReady = false;
-    let reactionsReady = false;
-    let authReady = false;
-    let authRequestPending = false;
-    let loginRequestPending = false;
-    let unsubscribeAuth = null;
-    let stopMessages = null;
-    let stopReactions = null;
-    let roomGeneration = 0;
-    let lastMessageIds = [];
+    let activeMessageId = null;
+    let messagesCache = {}, reactionsCache = {};
+    let stopMessages = null, stopReactions = null;
 
-    function showError(element, message = "") {
-      element.textContent = message;
-    }
-
-    function errorMessage(error) {
-      const messages = {
-        "auth/unauthorized-domain":
-          "هذا النطاق غير مسموح به. أضفه إلى Authorized domains.",
-        "auth/popup-blocked":
-          "المتصفح منع نافذة تسجيل الدخول. أعد المحاولة.",
-        "auth/network-request-failed":
-          "تحقق من اتصال الإنترنت وحاول مجدداً.",
-        "auth/too-many-requests":
-          "محاولات كثيرة. انتظر قليلاً ثم أعد المحاولة.",
-        "auth/operation-not-allowed":
-          "تسجيل الدخول بـ Google غير مفعّل في Firebase.",
-        "auth/operation-not-supported-in-this-environment":
-          "افتح الموقع عبر HTTPS أو خادم محلي مدعوم."
-      };
-
-      return messages[error?.code] ||
-        "تعذّر إكمال العملية. تحقق من إعدادات Firebase وحاول مجدداً.";
-    }
-
-    function stopRoomListeners() {
-      if (stopMessages) stopMessages();
-      if (stopReactions) stopReactions();
-
-      stopMessages = null;
-      stopReactions = null;
-      messagesRef = null;
-      reactionsRef = null;
-      messagesQuery = null;
-    }
-
-    function resetRoom() {
-      roomGeneration++;
-      stopRoomListeners();
-      currentRoom = null;
-      messagesCache = {};
-      reactionsCache = {};
-      lastMessageIds = [];
-      messagesReady = false;
-      reactionsReady = false;
-      loading = false;
-    }
-
-    function renderEmpty(message) {
-      chatMessages.replaceChildren();
-
-      const p = document.createElement("p");
-      p.className = "empty";
-      p.textContent = message;
-      chatMessages.appendChild(p);
-    }
-
-    function makeElement(tag, className, text) {
-      const element = document.createElement(tag);
-      if (className) element.className = className;
-      if (text !== undefined) element.textContent = text;
-      return element;
-    }
-
-    function renderMessages(shouldScroll = false) {
-      if (!messagesReady || !reactionsReady) return;
-
-      const oldScroll = chatMessages.scrollTop;
-      const nearBottom =
-        chatMessages.scrollHeight -
-        chatMessages.scrollTop -
-        chatMessages.clientHeight < 100;
-
-      const fragment = document.createDocumentFragment();
+    function renderMessages() {
+      chatMessages.innerHTML = '';
       const ids = Object.keys(messagesCache);
 
       if (ids.length === 0) {
-        renderEmpty("ما كاش رسائل بعد. كون أول واحد يشارك! 💬");
+        chatMessages.innerHTML = '<p class="empty">لا توجد رسائل بعد. كن أول من يشارك! 💬</p>';
         return;
       }
 
       ids.forEach((id) => {
         const msg = messagesCache[id];
+        const isMe = currentUser && msg.uid === currentUser.uid;
+        
+        const row = document.createElement("div");
+        row.className = `message-row ${isMe ? 'mine' : ''}`;
 
-        if (!msg || typeof msg.text !== "string" ||
-            typeof msg.uid !== "string") return;
-
-        const mine = currentUser && msg.uid === currentUser.uid;
-        const card = makeElement(
-          "article",
-          "message" + (mine ? " mine" : "")
-        );
-
-        const author = makeElement(
-          "span",
-          "message-author",
-          mine ? "أنت" : "طالب"
-        );
-
-        const text = makeElement("div", "message-text", msg.text);
-
-        card.append(author, text);
-
-        if (typeof msg.timestamp === "number") {
-          const date = new Date(msg.timestamp);
-          const time = makeElement(
-            "time",
-            "message-time",
-            date.toLocaleTimeString("ar-DZ", {
-              hour: "2-digit",
-              minute: "2-digit"
-            })
-          );
-          card.appendChild(time);
-        }
-
-        const messageReactions = reactionsCache[id] || {};
-        const counts = new Map();
-
-        Object.values(messageReactions).forEach((emoji) => {
-          if (EMOJIS.includes(emoji)) {
-            counts.set(emoji, (counts.get(emoji) || 0) + 1);
-          }
+        const reactions = reactionsCache[id] || {};
+        let reactionBadges = '';
+        Object.values(reactions).forEach(e => {
+          if (EMOJIS.includes(e)) reactionBadges += ` ${e}`;
         });
 
-        if (counts.size) {
-          const row = makeElement("div", "reactions");
+        row.innerHTML = `
+          <img class="msg-avatar" src="${msg.photo || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'}" alt="">
+          <div class="message ${isMe ? 'mine' : ''}">
+            <span class="message-author">${isMe ? 'أنت' : (msg.sender || 'طالب')}</span>
+            <div class="message-text">${msg.text}</div>
+            ${reactionBadges ? `<div class="reactions"><span class="reaction-btn">${reactionBadges}</span></div>` : ''}
+          </div>
+        `;
 
-          counts.forEach((count, emoji) => {
-            const button = makeElement(
-              "button",
-              "reaction-btn" +
-                (messageReactions[currentUser.uid] === emoji
-                  ? " active" : ""),
-              `${emoji} ${count}`
-            );
-
-            button.type = "button";
-            button.setAttribute(
-              "aria-label",
-              `تفاعل ${emoji}، عدد التفاعلات ${count}`
-            );
-
-            button.addEventListener("click", () => {
-              addReaction(id, emoji);
-            });
-
-            row.appendChild(button);
-          });
-
-          card.appendChild(row);
-        }
-
-        const reactButton = makeElement(
-          "button", "reaction-btn", "😊 تفاعل"
-        );
-        reactButton.type = "button";
-        reactButton.addEventListener("click", () => {
-          openReactionPicker(id);
-        });
-        card.appendChild(reactButton);
-
-        fragment.appendChild(card);
+        row.addEventListener('click', () => openPicker(id));
+        chatMessages.appendChild(row);
       });
 
-      chatMessages.replaceChildren(fragment);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 
-      if (shouldScroll || nearBottom) {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      } else {
-        chatMessages.scrollTop = oldScroll;
+    function openPicker(id) {
+      activeMessageId = id;
+      $("reactionModal").style.display = "flex";
+    }
+
+    window.closePicker = function() {
+      $("reactionModal").style.display = "none";
+    }
+
+    window.confirmEmoji = async function(emoji) {
+      if (activeMessageId && currentUser && currentRoom) {
+        const target = ref(db, `rooms/${currentRoom}/reactions/${activeMessageId}/${currentUser.uid}`);
+        await set(target, emoji);
       }
+      closePicker();
     }
 
     function openSubject(room, title) {
-      if (!currentUser || !authReady) return;
-      if (!ALLOWED_ROOMS.has(room)) return;
-
-      resetRoom();
-
       currentRoom = room;
       subjectTitle.textContent = title;
       homePage.classList.add("hidden");
       subjectView.classList.remove("hidden");
-      showError(chatError);
 
-      renderEmpty("جاري تحميل الرسائل...");
-      chatStatus.textContent = "جاري الاتصال...";
-      userInput.value = "";
-      charCounter.textContent = "0 / 1000";
+      if (stopMessages) stopMessages();
+      if (stopReactions) stopReactions();
 
-      const generation = roomGeneration;
-      messagesRef = ref(db, `rooms/${room}/messages`);
-      reactionsRef = ref(db, `rooms/${room}/reactions`);
+      const q = query(ref(db, `rooms/${room}/messages`), orderByChild("timestamp"), limitToLast(100));
+      stopMessages = onValue(q, (snap) => {
+        messagesCache = snap.val() || {};
+        renderMessages();
+      });
 
-      messagesQuery = query(
-        messagesRef,
-        orderByChild("timestamp"),
-        limitToLast(100)
-      );
-
-      stopMessages = onValue(
-        messagesQuery,
-        (snapshot) => {
-          if (generation !== roomGeneration) return;
-
-          messagesCache = snapshot.val() || {};
-          messagesReady = true;
-          chatStatus.textContent = "آخر 100 رسالة";
-          renderMessages(true);
-        },
-        (error) => {
-          if (generation !== roomGeneration) return;
-          chatStatus.textContent = "تعذّر تحميل الرسائل";
-          showError(chatError, errorMessage(error));
-        }
-      );
-
-      stopReactions = onValue(
-        reactionsRef,
-        (snapshot) => {
-          if (generation !== roomGeneration) return;
-          reactionsCache = snapshot.val() || {};
-          reactionsReady = true;
-          renderMessages();
-        },
-        (error) => {
-          if (generation !== roomGeneration) return;
-          showError(chatError, errorMessage(error));
-        }
-      );
+      stopReactions = onValue(ref(db, `rooms/${room}/reactions`), (snap) => {
+        reactionsCache = snap.val() || {};
+        renderMessages();
+      });
     }
 
     function showHome() {
-      resetRoom();
       subjectView.classList.add("hidden");
       homePage.classList.remove("hidden");
-      showError(chatError);
+      if (stopMessages) stopMessages();
     }
 
-    async function addReaction(messageId, emoji) {
-      if (!currentUser || !currentRoom ||
-          !EMOJIS.includes(emoji)) return;
-
-      if (!Object.hasOwn(messagesCache, messageId)) return;
-
-      const target = ref(
-        db,
-        `rooms/${currentRoom}/reactions/${messageId}/${currentUser.uid}`
-      );
-
-      try {
-        const previous =
-          reactionsCache[messageId]?.[currentUser.uid];
-
-        // الضغط على نفس التفاعل مرة أخرى يزيله.
-        if (previous === emoji) {
-          await set(target, null);
-        } else {
-          await set(target, emoji);
-        }
-      } catch (error) {
-        showError(chatError, errorMessage(error));
-      }
-    }
-
-    function openReactionPicker(messageId) {
-      const selected = window.prompt(
-        "اختر رقماً للتفاعل:\n1 👍\n2 😂\n3 😮\n4 😢\n5 🚩"
-      );
-
-      const index = Number(selected) - 1;
-      if (!Number.isInteger(index) ||
-          index < 0 || index >= EMOJIS.length) return;
-
-      addReaction(messageId, EMOJIS[index]);
-    }
-
-    async function sendMessage(event) {
-      event.preventDefault();
-
-      if (loading || !currentUser || !currentRoom ||
-          !authReady || !ALLOWED_ROOMS.has(currentRoom)) return;
-
+    chatForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
       const text = userInput.value.trim();
+      if (!text || !currentUser) return;
 
-      if (!text) return;
-
-      if (text.length > MAX_MESSAGE_LENGTH) {
-        showError(chatError, "الرسالة طويلة بزاف.");
-        return;
-      }
-
-      loading = true;
-      sendBtn.disabled = true;
-      showError(chatError);
-
-      try {
-        const newMessage = push(
-          ref(db, `rooms/${currentRoom}/messages`)
-        );
-
-        await set(newMessage, {
-          uid: currentUser.uid,
-          text,
-          timestamp: serverTimestamp()
-        });
-
-        userInput.value = "";
-        charCounter.textContent = "0 / 1000";
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      } catch (error) {
-        showError(chatError, errorMessage(error));
-      } finally {
-        loading = false;
-        sendBtn.disabled = false;
-        userInput.focus();
-      }
-    }
-
-    loginBtn.addEventListener("click", async () => {
-      if (loginRequestPending) return;
-
-      loginRequestPending = true;
-      loginBtn.disabled = true;
-      showError(authError);
-
-      try {
-        await signInWithRedirect(auth, provider);
-      } catch (error) {
-        showError(authError, errorMessage(error));
-        loginRequestPending = false;
-        loginBtn.disabled = false;
-      }
-    });
-
-    logoutBtn.addEventListener("click", async () => {
-      logoutBtn.disabled = true;
-
-      try {
-        resetRoom();
-        await signOut(auth);
-      } catch (error) {
-        showError(chatError, errorMessage(error));
-      } finally {
-        logoutBtn.disabled = false;
-      }
-    });
-
-    document.querySelectorAll("[data-room]").forEach((button) => {
-      button.addEventListener("click", () => {
-        openSubject(button.dataset.room, button.dataset.title);
+      await push(ref(db, `rooms/${currentRoom}/messages`), {
+        uid: currentUser.uid,
+        sender: currentUser.displayName || "طالب",
+        photo: currentUser.photoURL || "",
+        text,
+        timestamp: serverTimestamp()
       });
+
+      userInput.value = "";
     });
 
+    loginBtn.addEventListener("click", () => signInWithRedirect(auth, provider));
+    logoutBtn.addEventListener("click", () => signOut(auth));
     $("backBtn").addEventListener("click", showHome);
-    chatForm.addEventListener("submit", sendMessage);
 
-    userInput.addEventListener("input", () => {
-      charCounter.textContent =
-        `${userInput.value.length} / ${MAX_MESSAGE_LENGTH}`;
+    document.querySelectorAll("[data-room]").forEach((btn) => {
+      btn.addEventListener("click", () => openSubject(btn.dataset.room, btn.dataset.title));
     });
 
-    // ما نخليوش أخطاء نتيجة إعادة التوجيه مخفية.
-    getRedirectResult(auth).catch((error) => {
-      showError(authError, errorMessage(error));
-    });
-
-    unsubscribeAuth = onAuthStateChanged(
-      auth,
-      (user) => {
-        authReady = true;
-        currentUser = user;
-
-        if (user) {
-          authScreen.classList.add("hidden");
-          appArea.classList.remove("hidden");
-          $("userName").textContent = user.displayName || "طالب";
-          loginRequestPending = false;
-          loginBtn.disabled = false;
-        } else {
-          resetRoom();
-          authScreen.classList.remove("hidden");
-          appArea.classList.add("hidden");
-          $("userName").textContent = "";
-          showError(chatError);
-          loginRequestPending = false;
-          loginBtn.disabled = false;
-        }
-      },
-      (error) => {
-        authReady = true;
-        currentUser = null;
-        resetRoom();
+    getRedirectResult(auth).catch(() => {});
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (user) {
+        authScreen.classList.add("hidden");
+        appArea.classList.remove("hidden");
+        userAvatar.src = user.photoURL || "";
+      } else {
         authScreen.classList.remove("hidden");
         appArea.classList.add("hidden");
-        showError(authError, errorMessage(error));
       }
-    );
-
-    window.addEventListener("pagehide", () => {
-      stopRoomListeners();
-      if (unsubscribeAuth) unsubscribeAuth();
     });
   </script>
 </body>
