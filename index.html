@@ -224,16 +224,13 @@
     .message-author { display: block; margin-bottom: 4px; color: var(--accent); font-size: .75rem; font-weight: 800; }
     .message.mine .message-author { color: #bfdbfe; }
     .message-text { white-space: pre-wrap; line-height: 1.6; user-select: text; -webkit-user-select: text; }
-    .message-time { display: block; margin-top: 6px; color: var(--muted); font-size: .68rem; }
 
     .reactions { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
     .reaction-btn { padding: 3px 8px; border: 1px solid var(--border); border-radius: 20px; background: #0b1120; color: var(--text); font-size: 0.78rem; }
-    .reaction-btn.active { border-color: var(--accent); }
 
     .composer { display: flex; gap: 8px; padding: 12px; background: var(--bg); border-top: 1px solid var(--border); }
     .composer input { width: 100%; padding: 12px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
 
-    /* Picker Popover */
     .reaction-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 100; }
     .reaction-box { background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 10px 18px; display: flex; gap: 14px; font-size: 1.5rem; }
     .reaction-box span { cursor: pointer; transition: transform 0.1s; }
@@ -248,7 +245,6 @@
 
 <body>
 
-  <!-- نافذة التفاعلات البسيطة -->
   <div class="reaction-modal" id="reactionModal" onclick="closePicker()">
     <div class="reaction-box" onclick="event.stopPropagation()">
       <span onclick="confirmEmoji('👍')">👍</span>
@@ -344,7 +340,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
     import { getDatabase, ref, push, set, onValue, off, query, orderByChild, limitToLast, serverTimestamp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
     const firebaseConfig = {
@@ -374,11 +370,6 @@
     const subjectView = $("subjectView");
     const subjectTitle = $("subjectTitle");
     const chatMessages = $("chatMessages");
-    const chatStatus = $("chatStatus");
-    const chatError = $("chatError");
-    const chatForm = $("chatForm");
-    const userInput = $("userInput");
-    const sendBtn = $("sendBtn");
     const userAvatar = $("userAvatar");
 
     const EMOJIS = ["👍", "😂", "😮", "😢", "🚩"];
@@ -470,9 +461,10 @@
       if (stopMessages) stopMessages();
     }
 
-    chatForm.addEventListener("submit", async (e) => {
+    $("chatForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const text = userInput.value.trim();
+      const input = $("userInput");
+      const text = input.value.trim();
       if (!text || !currentUser) return;
 
       await push(ref(db, `rooms/${currentRoom}/messages`), {
@@ -483,10 +475,27 @@
         timestamp: serverTimestamp()
       });
 
-      userInput.value = "";
+      input.value = "";
     });
 
-    loginBtn.addEventListener("click", () => signInWithRedirect(auth, provider));
+    // آلية تسجيل الدخول الذكية للحل المباشر للمشكلة
+    loginBtn.addEventListener("click", async () => {
+      loginBtn.disabled = true;
+      authError.textContent = "";
+
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (err) {
+        console.warn("Popup blocked, trying redirect...", err);
+        try {
+          await signInWithRedirect(auth, provider);
+        } catch (redirErr) {
+          authError.textContent = "خطأ في الاتصال، أعد المحاولة.";
+          loginBtn.disabled = false;
+        }
+      }
+    });
+
     logoutBtn.addEventListener("click", () => signOut(auth));
     $("backBtn").addEventListener("click", showHome);
 
@@ -495,12 +504,14 @@
     });
 
     getRedirectResult(auth).catch(() => {});
+
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
+      loginBtn.disabled = false;
       if (user) {
         authScreen.classList.add("hidden");
         appArea.classList.remove("hidden");
-        userAvatar.src = user.photoURL || "";
+        userAvatar.src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
       } else {
         authScreen.classList.remove("hidden");
         appArea.classList.add("hidden");
