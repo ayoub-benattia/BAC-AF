@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>لوحة التحكم والإشراف | B4C Admin</title>
+  <style>
+    :root { --bg: #0b1120; --surface: #151f32; --border: #334155; --text: #f8fafc; --accent: #38bdf8; --danger: #ef4444; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 20px; max-width: 1000px; margin: 0 auto; }
+    h1 { color: var(--danger); margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 20px; }
+    .report-item { background: #1e293b; border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .btn { padding: 6px 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
+    .btn-danger { background: var(--danger); color: #fff; }
+  </style>
+</head>
+<body>
+  <h1>🛡️ لوحة التحكم والإشراف الفائق (B4C Admin)</h1>
+
+  <div class="card">
+    <h3>🚩 قائمة البلاغات الواردة من الطلاب</h3>
+    <div id="reportsList" style="margin-top: 10px;">جاري تحميل البلاغات...</div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+    import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCi8tBwbrQ2N3HPK266BnyLBbNIBZ1ggsg",
+      authDomain: "bac-af.firebaseapp.com",
+      databaseURL: "https://bac-af-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "bac-af",
+      storageBucket: "bac-af.firebasestorage.app",
+      messagingSenderId: "682004900162",
+      appId: "1:682004900162:web:6e74a6308b9e713dd600db",
+      measurementId: "G-SMW8DZY8EX"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+    const ADMIN_EMAIL = "ayoub.benatia.e@gmail.com";
+
+    onAuthStateChanged(auth, (user) => {
+      if (user && user.email === ADMIN_EMAIL) {
+        loadReports();
+      } else {
+        document.body.innerHTML = "<h2 style='color:red; text-align:center; margin-top:50px;'>🚫 الوصول غير مصرح به! هاته الصفحة مخصصة للمدير الرئيسي فقط.</h2>";
+      }
+    });
+
+    function loadReports() {
+      onValue(ref(db, 'reports'), (snap) => {
+        const container = document.getElementById('reportsList');
+        container.innerHTML = '';
+        const data = snap.val();
+        if (data) {
+          Object.entries(data).forEach(([repId, rep]) => {
+            const div = document.createElement('div');
+            div.className = 'report-item';
+            div.innerHTML = `
+              <div>
+                <strong>البلاغ ضد المستخدم:</strong> ${rep.targetUid}<br>
+                <small style="color:#94a3b8">المبلغ: ${rep.reporter}</small>
+              </div>
+              <button class="btn btn-danger" onclick="banUser('${rep.targetUid}', '${repId}')">🚫 حظر المستخدم نهائياً</button>
+            `;
+            container.appendChild(div);
+          });
+        } else {
+          container.innerHTML = '<p style="color:#94a3b8;">لا توجد بلاغات حالية.</p>';
+        }
+      });
+    }
+
+    window.banUser = async function(uid, repId) {
+      if (confirm("هل أنت متأكد من حظر هذا المستخدم؟")) {
+        await set(ref(db, `banned_users/${uid}`), true);
+        await remove(ref(db, `reports/${repId}`));
+        alert("تم الحظر بنجاح!");
+      }
+    };
+  </script>
+</body>
+</html>
