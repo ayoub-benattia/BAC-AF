@@ -8,9 +8,6 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#0b0f19">
     <title>منصة الآداب والفلسفة - B4C</title>
 
@@ -47,134 +44,135 @@
 
         body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; }
 
+        /* الشاشة الأولى: تسجيل الدخول */
         .auth-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; text-align: center; }
-        .auth-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 35px 25px; max-width: 420px; width: 100%; display: flex; flex-direction: column; gap: 18px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
-        .auth-card h2 { color: var(--accent-color); font-size: 1.5rem; }
-        .auth-btn { padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.95rem; }
-        .btn-google { background: #ffffff; color: #1f2937; transition: 0.2s; }
-        .btn-google:hover { background: #f3f4f6; }
-        .btn-logout { background: #ef4444; color: #fff; padding: 6px 12px; border-radius: 8px; border: none; font-size: 0.8rem; cursor: pointer; font-weight: bold; }
+        .auth-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 35px 25px; max-width: 400px; width: 100%; display: flex; flex-direction: column; gap: 18px; }
+        .auth-card h2 { color: var(--accent-color); font-size: 1.4rem; }
+        .auth-btn { padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.95rem; background: #fff; color: #111; }
 
         #appArea { display: none; flex-direction: column; min-height: 100vh; }
         
-        header { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 12px 4%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.3rem; font-weight: 800; color: var(--accent-color); cursor: pointer; }
-        .header-controls { display: flex; align-items: center; gap: 12px; }
-        .online-count { background: rgba(34, 197, 94, 0.1); color: #22c55e; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; border: 1px solid rgba(34, 197, 94, 0.2); }
-        .theme-btn { background: var(--card-sub); border: 1px solid var(--border-color); color: var(--text-color); padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+        /* الهيدر الأنيق والمرتب */
+        header { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.1rem; font-weight: 800; color: var(--accent-color); cursor: pointer; white-space: nowrap; }
+        .header-controls { display: flex; align-items: center; gap: 8px; }
+        .online-count { background: rgba(34, 197, 94, 0.1); color: #22c55e; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(34, 197, 94, 0.2); }
+        .theme-btn { background: var(--card-sub); border: 1px solid var(--border-color); color: var(--text-color); padding: 5px 8px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
+        .user-avatar-header { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--accent-color); object-fit: cover; }
+        .btn-logout { background: #ef4444; color: #fff; padding: 5px 10px; border-radius: 6px; border: none; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
+
+        .container { max-width: 1200px; margin: 0 auto; width: 100%; padding: 15px; flex: 1; display: flex; flex-direction: column; }
+
+        /* بطاقات المواد */
+        .subjects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 15px; }
+        .subject-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 10px; }
+        .subject-card .icon { font-size: 2.2rem; }
+        .subject-card h3 { font-size: 1.1rem; color: var(--text-color); }
+        .subject-card p { font-size: 0.85rem; color: var(--text-sub); line-height: 1.4; }
+        .subject-card .badge { align-self: flex-start; background: rgba(56, 189, 248, 0.1); color: var(--accent-color); padding: 3px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: bold; }
+
+        /* صفحة المادة المستقلة */
+        .subject-page { display: none; flex-direction: column; gap: 12px; flex: 1; }
+        .subject-top-bar { display: flex; justify-content: space-between; align-items: center; }
+        .back-btn { background: var(--card-sub); color: var(--accent-color); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.82rem; }
+
+        /* تبويبات التنقل الخاصة بالمادة (دروس / شات) */
+        .view-tabs { display: flex; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 4px; gap: 4px; }
+        .v-tab { flex: 1; padding: 8px; text-align: center; background: none; border: none; color: var(--text-sub); font-weight: bold; font-size: 0.85rem; cursor: pointer; border-radius: 8px; }
+        .v-tab.active { background: var(--accent-color); color: #000; }
+
+        /* الأقسام المستقلة */
+        .view-content { flex: 1; display: flex; flex-direction: column; }
+
+        /* 1. قسم الملخصات */
+        .lessons-view { display: flex; flex-direction: column; gap: 12px; }
+        .search-box { width: 100%; padding: 10px 14px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-color); outline: none; font-size: 0.88rem; }
+        .action-bar-lessons { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .contrib-btn { background: #2563eb; color: #fff; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
         
-        /* البروفايل العلوي - صورة فقط */
-        .user-avatar-header { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--accent-color); object-fit: cover; cursor: pointer; }
-        .user-profile { display: flex; align-items: center; gap: 10px; }
+        .lesson-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; border-right: 4px solid var(--accent-color); }
+        .lesson-item h4 { font-size: 0.95rem; color: var(--text-color); margin-bottom: 4px; }
+        .lesson-item p { font-size: 0.85rem; color: var(--text-sub); line-height: 1.4; }
 
-        .container { max-width: 1400px; margin: 0 auto; width: 95%; padding: 25px 0; flex: 1; }
-
-        .subjects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-        .subject-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; cursor: pointer; display: flex; flex-direction: column; gap: 12px; transition: transform 0.2s, border-color 0.2s; }
-        .subject-card:hover { transform: translateY(-4px); border-color: var(--accent-color); }
-        .subject-card .icon { font-size: 2.5rem; }
-        .subject-card h3 { font-size: 1.2rem; color: var(--text-color); }
-        .subject-card p { font-size: 0.88rem; color: var(--text-sub); line-height: 1.5; }
-        .subject-card .badge { align-self: flex-start; background: rgba(56, 189, 248, 0.1); color: var(--accent-color); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
-
-        .subject-page { display: none; flex-direction: column; gap: 18px; }
-        .back-btn { align-self: flex-start; background: var(--card-sub); color: var(--accent-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.88rem; }
-        .search-box { width: 100%; padding: 12px 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-color); outline: none; font-size: 0.9rem; }
-
-        .subject-layout { display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 20px; }
-
-        .materials-section { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; }
-        .materials-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        .materials-header h2 { color: var(--accent-color); font-size: 1.15rem; }
-        .contrib-btn { background: #2563eb; color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
-        
-        .lesson-item { background: var(--card-sub); border-radius: 10px; padding: 15px; margin-bottom: 12px; border-right: 4px solid var(--accent-color); }
-        .lesson-item h4 { font-size: 1rem; color: var(--text-color); margin-bottom: 6px; }
-        .lesson-item p { font-size: 0.88rem; color: var(--text-sub); line-height: 1.5; }
-
-        /* الشات ونظام الرسائل والصور */
-        .chat-subpanel { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; display: flex; flex-direction: column; height: 550px; position: relative; }
-        .chat-header { padding: 12px 16px; background: var(--card-sub); border-top-left-radius: 16px; border-top-right-radius: 16px; font-size: 0.9rem; font-weight: bold; color: var(--accent-color); }
-        .chat-messages { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        /* 2. قسم الشات النقية */
+        .chat-view { display: none; flex-direction: column; flex: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; height: calc(100vh - 180px); position: relative; }
+        .chat-messages { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
         
         .msg-row { display: flex; gap: 8px; align-items: flex-start; max-width: 88%; }
         .msg-row.msg-me { align-self: flex-end; flex-direction: row-reverse; }
         .msg-row.msg-other { align-self: flex-start; }
 
-        .msg-user-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px; }
+        .msg-user-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
         
-        .msg-box { padding: 10px 14px; border-radius: 14px; font-size: 0.88rem; position: relative; cursor: pointer; word-break: break-word; }
-        .msg-other .msg-box { background: var(--card-sub); color: var(--text-color); border-bottom-right-radius: 4px; }
-        .msg-me .msg-box { background: #2563eb; color: #fff; border-bottom-left-radius: 4px; }
+        .msg-box { padding: 8px 12px; border-radius: 12px; font-size: 0.85rem; word-break: break-word; }
+        .msg-other .msg-box { background: var(--card-sub); color: var(--text-color); border-bottom-right-radius: 2px; }
+        .msg-me .msg-box { background: #2563eb; color: #fff; border-bottom-left-radius: 2px; }
         
-        .msg-sender { font-size: 0.72rem; font-weight: bold; color: var(--accent-color); margin-bottom: 3px; display: block; }
+        .msg-sender { font-size: 0.7rem; font-weight: bold; color: var(--accent-color); margin-bottom: 2px; display: block; }
         .msg-me .msg-sender { color: #bfdbfe; }
         
-        .reply-quote { background: rgba(0,0,0,0.25); border-right: 3px solid var(--accent-color); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; margin-bottom: 6px; opacity: 0.9; }
+        .reply-quote { background: rgba(0,0,0,0.25); border-right: 3px solid var(--accent-color); padding: 4px 6px; border-radius: 4px; font-size: 0.72rem; margin-bottom: 4px; opacity: 0.9; }
         
-        .reactions-container { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
-        .reaction-badge { background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 10px; font-size: 0.72rem; display: inline-flex; align-items: center; gap: 3px; border: 1px solid rgba(255,255,255,0.08); }
+        .reactions-container { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+        .reaction-badge { background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 8px; font-size: 0.7rem; }
 
-        .reaction-picker-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .reaction-picker { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 30px; padding: 8px 16px; display: flex; gap: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .picker-emoji { font-size: 1.6rem; cursor: pointer; transition: transform 0.15s; }
-        .picker-emoji:hover { transform: scale(1.3); }
+        /* نافذة التفاعلات والإبلاغ (Popup) */
+        .reaction-picker-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .reaction-picker { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 10px 16px; display: flex; gap: 10px; align-items: center; }
+        .picker-emoji { font-size: 1.5rem; cursor: pointer; }
+        .report-btn { color: #ef4444; font-size: 0.8rem; font-weight: bold; cursor: pointer; border-right: 1px solid var(--border-color); padding-right: 8px; margin-right: 4px; }
 
-        .reply-preview { background: var(--card-sub); padding: 8px 14px; border-top: 1px solid var(--border-color); font-size: 0.78rem; display: none; justify-content: space-between; align-items: center; color: var(--accent-color); }
-        .chat-input { padding: 12px; border-top: 1px solid var(--border-color); display: flex; gap: 8px; }
-        .chat-input input { flex: 1; padding: 10px 14px; background: var(--card-sub); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 8px; outline: none; font-size: 0.88rem; }
-        .chat-input button { background: #2563eb; color: #fff; border: none; padding: 0 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.88rem; }
-
-        @media (max-width: 850px) {
-            .subject-layout { grid-template-columns: 1fr; }
-            .chat-subpanel { height: 420px; }
-            .container { width: 92%; }
-        }
+        .reply-preview { background: var(--card-sub); padding: 6px 12px; border-top: 1px solid var(--border-color); font-size: 0.75rem; display: none; justify-content: space-between; align-items: center; color: var(--accent-color); }
+        .chat-input { padding: 10px; border-top: 1px solid var(--border-color); display: flex; gap: 6px; }
+        .chat-input input { flex: 1; padding: 8px 12px; background: var(--card-sub); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 8px; outline: none; font-size: 0.85rem; }
+        .chat-input button { background: #2563eb; color: #fff; border: none; padding: 0 14px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
+    <!-- نافذة التفاعلات والإبلاغ -->
     <div class="reaction-picker-overlay" id="reactionOverlay" onclick="closePicker()">
         <div class="reaction-picker" onclick="event.stopPropagation()">
+            <span class="report-btn" onclick="reportMessage()">🚩 إبلاغ</span>
             <span class="picker-emoji" onclick="selectReaction('😂')">😂</span>
             <span class="picker-emoji" onclick="selectReaction('👍')">👍</span>
             <span class="picker-emoji" onclick="selectReaction('😶')">😶</span>
             <span class="picker-emoji" onclick="selectReaction('🧐')">🧐</span>
             <span class="picker-emoji" onclick="selectReaction('😢')">😢</span>
             <span class="picker-emoji" onclick="selectReaction('⁉️')">⁉️</span>
-            <span class="picker-emoji" style="font-size: 1rem; opacity:0.7; margin-right: 5px;" onclick="triggerReplyFromPicker()">↩️</span>
+            <span class="picker-emoji" style="font-size: 1rem; opacity:0.7;" onclick="triggerReplyFromPicker()">↩️</span>
         </div>
     </div>
 
+    <!-- تسجيل الدخول -->
     <div class="auth-screen" id="authScreen">
         <div class="auth-card">
             <h2>📜 منصة الآداب والفلسفة</h2>
             <p style="color: var(--text-sub); font-size: 0.88rem;">مرحباً بك! سجل دخولك للمناقشة وتصفح الملخصات.</p>
-            <button class="auth-btn btn-google" id="googleLoginBtn">
+            <button class="auth-btn" id="googleLoginBtn">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="Google">
                 الدخول عبر حساب Google
             </button>
         </div>
     </div>
 
+    <!-- التطبيق الرئيسي -->
     <div id="appArea">
         <header>
             <div class="logo" onclick="showHomePage()">📜 B4C آداب وفلسفة</div>
             <div class="header-controls">
                 <span class="online-count">🟢 <span id="onlineCounter">1</span></span>
                 <button class="theme-btn" onclick="toggleTheme()">☀️/🌙</button>
-                <div class="user-profile">
-                    <!-- الصورة فقط في الشاشة الرئيسية بدون اسم -->
-                    <img id="userHeaderAvatar" class="user-avatar-header" src="" alt="حسابي" title="حسابك">
-                    <button class="btn-logout" id="logoutBtn">خروج</button>
-                </div>
+                <img id="userHeaderAvatar" class="user-avatar-header" src="" alt="حسابي">
+                <button class="btn-logout" id="logoutBtn">خروج</button>
             </div>
         </header>
 
         <div class="container">
+            <!-- الصفحة الرئيسية -->
             <div id="homePage">
-                <h2 style="font-size: 1.3rem; margin-bottom: 6px;">المواد المقررة للبكالوريا</h2>
-                <p style="color: var(--text-sub); font-size: 0.88rem; margin-bottom: 18px;">اختر المادة لتصفح الدروس والمناقشة المباشرة.</p>
+                <h2 style="font-size: 1.2rem; margin-bottom: 4px;">المواد المقررة للبكالوريا</h2>
+                <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 14px;">اختر المادة لتصفح الدروس والمناقشة المباشرة.</p>
 
                 <div class="subjects-grid">
                     <div class="subject-card" onclick="openSubject('philo', 'مادة الفلسفة', '🧠')">
@@ -207,32 +205,45 @@
                 </div>
             </div>
 
+            <!-- صفحة المادة النظيفة -->
             <div id="subjectPage" class="subject-page">
-                <button class="back-btn" onclick="showHomePage()">➡️ العودة للمواد</button>
-                <h2 id="subjectTitle" style="color: var(--accent-color);">اسم المادة</h2>
+                <div class="subject-top-bar">
+                    <button class="back-btn" onclick="showHomePage()">➡️ المواد</button>
+                    <h3 id="subjectTitle" style="color: var(--accent-color); font-size: 1.05rem;">اسم المادة</h3>
+                </div>
 
-                <input type="text" id="lessonSearch" class="search-box" placeholder="🔍 ابحث عن درس أو مقالة..." oninput="filterLessons()">
+                <!-- تبويبات الفصل الكلي (دروس VS شات) -->
+                <div class="view-tabs">
+                    <button class="v-tab active" id="tabLessonsBtn" onclick="switchView('lessons')">📚 الدروس والملخصات</button>
+                    <button class="v-tab" id="tabChatBtn" onclick="switchView('chat')">💬 المناقشة الحية</button>
+                </div>
 
-                <div class="subject-layout">
-                    <div class="materials-section">
-                        <div class="materials-header">
-                            <h2>📚 الدروس والملخصات</h2>
+                <div class="view-content">
+                    <!-- 1. قسم الملخصات المستقل -->
+                    <div class="lessons-view" id="lessonsView">
+                        <input type="text" id="lessonSearch" class="search-box" placeholder="🔍 ابحث عن درس أو مقالة..." oninput="filterLessons()">
+                        <div class="action-bar-lessons">
+                            <span style="font-size:0.85rem; font-weight:bold;">قائمة المراجعة:</span>
                             <button class="contrib-btn" onclick="suggestLesson()">➕ شارك ملخصك</button>
                         </div>
                         <div id="materialsContent"></div>
+                        
+                        <!-- قسم ملخصات الطلاب المقترحة -->
+                        <h4 style="color: var(--accent-color); margin-top: 15px; font-size:0.9rem;">📝 مشاركات وملخصات الطلاب:</h4>
+                        <div id="studentSubmissions"></div>
                     </div>
 
-                    <div class="chat-subpanel">
-                        <div class="chat-header">💬 المناقشة المباشرة</div>
+                    <!-- 2. قسم الشات المستقل الشامل -->
+                    <div class="chat-view" id="chatView">
                         <div class="chat-messages" id="chatMessages"></div>
                         
                         <div class="reply-preview" id="replyPreview">
-                            <span id="replyPreviewText">جاري الرد على...</span>
+                            <span id="replyPreviewText">جاري الرد...</span>
                             <span style="cursor:pointer;" onclick="cancelReply()">✕</span>
                         </div>
 
                         <div class="chat-input">
-                            <input type="text" id="userInput" placeholder="اسأل أو ناقش نقطة...">
+                            <input type="text" id="userInput" placeholder="اكتب مشاركتك هنا...">
                             <button id="sendBtn">إرسال</button>
                         </div>
                     </div>
@@ -274,24 +285,16 @@
       let activeTargetSender = null;
       let activeTargetText = null;
 
-      googleLoginBtn.addEventListener('click', () => {
-          signInWithRedirect(auth, provider);
-      });
-
-      logoutBtn.addEventListener('click', () => {
-          signOut(auth);
-      });
+      googleLoginBtn.addEventListener('click', () => signInWithRedirect(auth, provider));
+      logoutBtn.addEventListener('click', () => signOut(auth));
 
       getRedirectResult(auth).catch((error) => {
-          if (error.code && error.code !== 'auth/redirect-cancelled-by-user') {
-              alert("خطأ: " + error.message);
-          }
+          if (error.code && error.code !== 'auth/redirect-cancelled-by-user') alert("خطأ: " + error.message);
       });
 
       onAuthStateChanged(auth, (user) => {
           if (user) {
               currentUser = user;
-              // إظهار الصورة فقط في الشاشة الرئيسية
               userHeaderAvatar.src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
               authScreen.style.display = 'none';
               appArea.style.display = 'flex';
@@ -307,21 +310,19 @@
           const presenceRef = ref(db, 'presence/' + uid);
           set(presenceRef, true);
           onDisconnect(presenceRef).remove();
-
           onValue(ref(db, 'presence'), (snap) => {
               const count = snap.val() ? Object.keys(snap.val()).length : 1;
               document.getElementById('onlineCounter').innerText = count;
           });
       }
 
-      window.toggleTheme = function() {
-          document.body.classList.toggle('light-theme');
-      };
+      window.toggleTheme = function() { document.body.classList.toggle('light-theme'); };
 
       const chatMessages = document.getElementById('chatMessages');
       const userInput = document.getElementById('userInput');
       const sendBtn = document.getElementById('sendBtn');
       const materialsContent = document.getElementById('materialsContent');
+      const studentSubmissions = document.getElementById('studentSubmissions');
       const subjectTitle = document.getElementById('subjectTitle');
       const replyPreview = document.getElementById('replyPreview');
       const replyPreviewText = document.getElementById('replyPreviewText');
@@ -365,9 +366,26 @@
           subjectTitle.innerText = icon + ' ' + titleName;
           activeLessons = materialsData[key] || [];
           renderLessons(activeLessons);
+          listenToSubmissions(key);
+
+          switchView('lessons');
 
           if (currentRef) off(currentRef);
           listenToRoom(key);
+      };
+
+      window.switchView = function(view) {
+          if(view === 'lessons') {
+              document.getElementById('lessonsView').style.display = 'flex';
+              document.getElementById('chatView').style.display = 'none';
+              document.getElementById('tabLessonsBtn').classList.add('active');
+              document.getElementById('tabChatBtn').classList.remove('active');
+          } else {
+              document.getElementById('lessonsView').style.display = 'none';
+              document.getElementById('chatView').style.display = 'flex';
+              document.getElementById('tabChatBtn').classList.add('active');
+              document.getElementById('tabLessonsBtn').classList.remove('active');
+          }
       };
 
       function renderLessons(list) {
@@ -378,7 +396,7 @@
           }
           list.forEach(item => {
               const div = document.createElement('div');
-              div.className = 'lesson-card lesson-item';
+              div.className = 'lesson-item';
               div.innerHTML = `<h4>${item.title}</h4><p>${item.desc}</p>`;
               materialsContent.appendChild(div);
           });
@@ -390,12 +408,39 @@
           renderLessons(filtered);
       };
 
+      // مشاركة ورؤية ملخصات الطلاب
       window.suggestLesson = function() {
-          const link = prompt("أدخل عنوان أو رابط الملخص الذي تريد مشاركته:");
-          if(link) {
-              alert("شكراً لك! تم إرسال ملخصك للمراجعة وسيطرح قريباً.");
+          const title = prompt("أدخل عنوان الملخص أو المقالة:");
+          if(!title) return;
+          const link = prompt("أدخل رابط الملخص أو الفكرة:");
+          if(title && link && currentUser) {
+              push(ref(db, `submissions/${currentRoom}`), {
+                  sender: currentUser.displayName || "طالب",
+                  title: title,
+                  link: link,
+                  timestamp: Date.now()
+              });
+              alert("تمت إضافة ملخصك بنجاح وسيطهر للجميع فوراً!");
           }
       };
+
+      function listenToSubmissions(room) {
+          onValue(ref(db, `submissions/${room}`), (snap) => {
+              studentSubmissions.innerHTML = '';
+              const data = snap.val();
+              if(data) {
+                  Object.values(data).forEach(sub => {
+                      const div = document.createElement('div');
+                      div.className = 'lesson-item';
+                      div.style.borderColor = '#22c55e';
+                      div.innerHTML = `<h4>${sub.title} <span style="font-size:0.75rem; color:var(--accent-color);">[بواسطة: ${sub.sender}]</span></h4><p><a href="${sub.link}" target="_blank" style="color:var(--accent-color);">🔗 فتح الملخص المقترح</a></p>`;
+                      studentSubmissions.appendChild(div);
+                  });
+              } else {
+                  studentSubmissions.innerHTML = '<p style="font-size:0.8rem; color:var(--text-sub);">لا توجد ملخصات مقترحة بعد.</p>';
+              }
+          });
+      }
 
       function listenToRoom(room) {
           currentRef = ref(db, 'rooms/' + room);
@@ -413,21 +458,16 @@
                       let reactionsHTML = '';
                       if(msg.reactions) {
                           const counts = {};
-                          Object.values(msg.reactions).forEach(emoji => {
-                              counts[emoji] = (counts[emoji] || 0) + 1;
-                          });
+                          Object.values(msg.reactions).forEach(emoji => { counts[emoji] = (counts[emoji] || 0) + 1; });
                           reactionsHTML = '<div class="reactions-container">';
-                          Object.entries(counts).forEach(([emoji, count]) => {
-                              reactionsHTML += `<span class="reaction-badge">${emoji} ${count}</span>`;
-                          });
+                          Object.entries(counts).forEach(([emoji, count]) => { reactionsHTML += `<span class="reaction-badge">${emoji} ${count}</span>`; });
                           reactionsHTML += '</div>';
                       }
 
-                      // صورة الحساب مع الرسالة + الاسم
                       const userAvatarSrc = msg.userPhoto || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
 
                       row.innerHTML = `
-                          <img class="msg-user-avatar" src="${userAvatarSrc}" alt="${msg.sender || 'طالب'}">
+                          <img class="msg-user-avatar" src="${userAvatarSrc}" alt="">
                           <div class="msg-box">
                               ${replyHTML}
                               <span class="msg-sender">${isMe ? 'أنت' : (msg.sender || 'طالب')}</span>
@@ -436,15 +476,19 @@
                           </div>
                       `;
 
+                      // حل مشكلة الضغط المطول مع منع التفعيل أثناء السحب (Scroll protection)
                       let pressTimer;
+                      let isScrolling = false;
+
                       row.addEventListener('touchstart', () => {
-                          pressTimer = setTimeout(() => openPicker(msgId, msg.sender || 'طالب', msg.text), 450);
+                          isScrolling = false;
+                          pressTimer = setTimeout(() => {
+                              if (!isScrolling) openPicker(msgId, msg.sender || 'طالب', msg.text);
+                          }, 500);
                       });
+
+                      row.addEventListener('touchmove', () => { isScrolling = true; clearTimeout(pressTimer); });
                       row.addEventListener('touchend', () => clearTimeout(pressTimer));
-                      row.addEventListener('contextmenu', (e) => {
-                          e.preventDefault();
-                          openPicker(msgId, msg.sender || 'طالب', msg.text);
-                      });
 
                       chatMessages.appendChild(row);
                   });
@@ -462,30 +506,34 @@
           reactionOverlay.style.display = 'flex';
       };
 
-      window.closePicker = function() {
-          reactionOverlay.style.display = 'none';
-      };
+      window.closePicker = function() { reactionOverlay.style.display = 'none'; };
 
       window.selectReaction = function(emoji) {
           if (!currentUser || !activeTargetMsgId) return;
           const reactionRef = ref(db, `rooms/${currentRoom}/${activeTargetMsgId}/reactions/${currentUser.uid}`);
-          
           onValue(reactionRef, (snap) => {
-              const currentEmoji = snap.val();
-              if (currentEmoji === emoji) {
-                  set(reactionRef, null);
-              } else {
-                  set(reactionRef, emoji);
-              }
+              if (snap.val() === emoji) set(reactionRef, null);
+              else set(reactionRef, emoji);
           }, { onlyOnce: true });
+          closePicker();
+      };
 
+      window.reportMessage = function() {
+          if (activeTargetMsgId && currentUser) {
+              push(ref(db, 'reports'), {
+                  reporter: currentUser.displayName,
+                  msgId: activeTargetMsgId,
+                  sender: activeTargetSender,
+                  text: activeTargetText,
+                  timestamp: Date.now()
+              });
+              alert("تم إرسال بلاغك للإدارة، شكراً لمساعدتك في حماية المنصة.");
+          }
           closePicker();
       };
 
       window.triggerReplyFromPicker = function() {
-          if (activeTargetSender && activeTargetText) {
-              setReply(activeTargetSender, activeTargetText);
-          }
+          if (activeTargetSender && activeTargetText) setReply(activeTargetSender, activeTargetText);
           closePicker();
       };
 
@@ -517,9 +565,7 @@
       }
 
       sendBtn.addEventListener('click', sendMessage);
-      userInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') sendMessage();
-      });
+      userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
     </script>
 </body>
 </html>
