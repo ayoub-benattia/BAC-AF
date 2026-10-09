@@ -5,108 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة الآداب والفلسفة - B4C</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #0b0f19; color: #e2e8f0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
         /* الهيدر العلوي */
-        header { background-color: #111827; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f2937; }
-        header h1 { font-size: 1.1rem; color: #38bdf8; font-weight: 700; }
-        .user-chip { background: #1f2937; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; }
-        .user-chip input { background: transparent; border: none; color: #38bdf8; font-weight: bold; width: 90px; outline: none; font-size: 0.8rem; }
+        header { background-color: #1e293b; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
+        header h1 { font-size: 1.2rem; color: #38bdf8; }
+        .user-chip { background: #0f172a; padding: 6px 12px; border-radius: 8px; border: 1px solid #334155; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+        .user-chip input { background: transparent; border: none; color: #38bdf8; font-weight: bold; width: 110px; outline: none; }
 
-        /* منطقة المحتوى الرئيسية */
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        /* الشاشة الرئيسية */
+        .app-layout { display: flex; flex: 1; overflow: hidden; }
 
-        /* التبويبات الثانوية (شات / دروس) */
-        .sub-tabs { display: flex; background: #111827; border-bottom: 1px solid #1f2937; }
-        .sub-tab-btn { flex: 1; padding: 10px; text-align: center; background: none; border: none; color: #9ca3af; font-weight: 600; font-size: 0.85rem; cursor: pointer; border-bottom: 2px solid transparent; }
-        .sub-tab-btn.active { color: #38bdf8; border-bottom-color: #38bdf8; background: rgba(56, 189, 248, 0.05); }
+        /* القائمة الجانبية (للكامبيوتر) / العلوية (للعدف) */
+        .nav-sidebar { width: 240px; background: #1e293b; padding: 15px; display: flex; flex-direction: column; gap: 8px; border-left: 1px solid #334155; flex-shrink: 0; }
+        .nav-sidebar h3 { font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px; }
+        .nav-btn { display: flex; align-items: center; gap: 10px; padding: 12px; background: transparent; color: #cbd5e1; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-align: right; width: 100%; transition: 0.2s; }
+        .nav-btn:hover { background: #334155; color: #fff; }
+        .nav-btn.active { background: #2563eb; color: #fff; }
 
-        /* منطقة الشات */
-        .chat-view { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        /* منطقة المحتوى */
+        .content-body { flex: 1; display: flex; flex-direction: column; background: #0f172a; overflow: hidden; }
+
+        /* تبويبات التبديل في التليفون */
+        .mobile-tabs { display: none; background: #1e293b; border-bottom: 1px solid #334155; }
+        .m-tab { flex: 1; padding: 12px; background: none; border: none; color: #94a3b8; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; }
+        .m-tab.active { color: #38bdf8; border-bottom-color: #38bdf8; background: rgba(56, 189, 248, 0.05); }
+
+        /* تقسيم الشاشة في الكمبيوتر: دروس + شات */
+        .main-workspace { flex: 1; display: flex; overflow: hidden; }
+
+        /* قسم الدروس */
+        .lessons-panel { width: 320px; background: #182234; padding: 15px; border-left: 1px solid #334155; overflow-y: auto; }
+        .lessons-panel h3 { font-size: 1rem; color: #38bdf8; margin-bottom: 12px; }
+        .lesson-card { background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-right: 3px solid #2563eb; font-size: 0.88rem; line-height: 1.4; }
+
+        /* قسم الشات */
+        .chat-panel { flex: 1; display: flex; flex-direction: column; background: #0f172a; }
+        .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
         
-        .msg-box { max-width: 82%; padding: 10px 14px; border-radius: 16px; font-size: 0.9rem; line-height: 1.4; word-break: break-word; }
-        .msg-other { background: #1f2937; color: #f3f4f6; align-self: flex-start; border-bottom-right-radius: 4px; }
-        .msg-me { background: #2563eb; color: #ffffff; align-self: flex-end; border-bottom-left-radius: 4px; }
-        .msg-sender { font-size: 0.72rem; font-weight: 700; color: #38bdf8; margin-bottom: 2px; display: block; }
+        .msg-box { max-width: 75%; padding: 10px 14px; border-radius: 12px; font-size: 0.9rem; word-break: break-word; }
+        .msg-other { background: #1e293b; color: #f8fafc; align-self: flex-start; border-bottom-right-radius: 2px; }
+        .msg-me { background: #2563eb; color: #ffffff; align-self: flex-end; border-bottom-left-radius: 2px; }
+        .msg-sender { font-size: 0.72rem; font-weight: bold; color: #38bdf8; margin-bottom: 3px; display: block; }
         .msg-me .msg-sender { color: #bfdbfe; }
         .msg-time { font-size: 0.65rem; opacity: 0.7; float: left; margin-top: 4px; margin-right: 8px; }
 
-        .input-area { padding: 12px; background: #111827; border-top: 1px solid #1f2937; display: flex; gap: 8px; }
-        input[type="text"]#userInput { flex: 1; padding: 10px 14px; border: 1px solid #374151; background: #1f2937; color: #fff; border-radius: 20px; outline: none; font-size: 0.9rem; }
-        input[type="text"]#userInput:focus { border-color: #2563eb; }
-        button#sendBtn { background: #2563eb; color: #fff; border: none; padding: 0 18px; border-radius: 20px; font-weight: 600; cursor: pointer; }
+        .input-area { padding: 12px; background: #1e293b; border-top: 1px solid #334155; display: flex; gap: 8px; }
+        input[type="text"]#userInput { flex: 1; padding: 10px 14px; border: 1px solid #334155; background: #0f172a; color: #fff; border-radius: 8px; outline: none; }
+        button#sendBtn { padding: 0 20px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* منطقة الملخصات والدروس */
-        .lessons-view { flex: 1; padding: 16px; overflow-y: auto; display: none; }
-        .lesson-card { background: #1f2937; padding: 14px; border-radius: 12px; margin-bottom: 12px; border-right: 4px solid #2563eb; }
-        .lesson-card h3 { font-size: 0.95rem; color: #38bdf8; margin-bottom: 6px; }
-        .lesson-card p { font-size: 0.85rem; color: #d1d5db; line-height: 1.5; }
-
-        /* القائمة السفلى للتنقل (Bottom Bar) */
-        .bottom-nav { background: #111827; border-top: 1px solid #1f2937; display: flex; justify-content: space-around; padding: 8px 0; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; color: #6b7280; font-size: 0.75rem; cursor: pointer; flex: 1; }
-        .nav-item .icon { font-size: 1.2rem; }
-        .nav-item.active { color: #38bdf8; font-weight: bold; }
+        /* تجاوب الشاشة للهواتف (Responsive Mobile View) */
+        @media (max-width: 768px) {
+            .app-layout { flex-direction: column; }
+            .nav-sidebar { width: 100%; height: auto; padding: 8px; flex-direction: row; overflow-x: auto; border-left: none; border-bottom: 1px solid #334155; }
+            .nav-sidebar h3 { display: none; }
+            .nav-btn { width: auto; white-space: nowrap; padding: 8px 14px; font-size: 0.85rem; }
+            
+            .mobile-tabs { display: flex; }
+            .main-workspace { flex-direction: column; }
+            .lessons-panel { width: 100%; border-left: none; display: none; }
+            .msg-box { max-width: 88%; }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>📜 B4C آداب وفلسفة</h1>
+        <h1>📜 منصة الآداب والفلسفة - B4C</h1>
         <div class="user-chip">
             <span>👤</span>
             <input type="text" id="usernameInput" placeholder="اسمك...">
         </div>
     </header>
 
-    <div class="main-content">
-        <!-- التبويبات الداخلية (دردشة / ملخصات) -->
-        <div class="sub-tabs" id="subTabs">
-            <button class="sub-tab-btn active" onclick="switchSubTab('chat')">💬 الدردشة الحية</button>
-            <button class="sub-tab-btn" id="lessonsTabBtn" onclick="switchSubTab('lessons')">📚 الدروس والملخصات</button>
-        </div>
+    <div class="app-layout">
+        <!-- القائمة الجانبية (للكامبيوتر) / شريط أفقي قابل للسحب (للتليفون) -->
+        <nav class="nav-sidebar">
+            <h3>الأقسام التعليمية</h3>
+            <button class="nav-btn active" onclick="switchSection('general', this)">💬 الدردشة العامة</button>
+            <button class="nav-btn" onclick="switchSection('philo', this)">🧠 قسم الفلسفة</button>
+            <button class="nav-btn" onclick="switchSection('arabic', this)">📚 الأدب العربي</button>
+            <button class="nav-btn" onclick="switchSection('history', this)">🌍 الاجتماعيات</button>
+        </nav>
 
-        <!-- واجهة الدردشة -->
-        <div class="chat-view" id="chatView">
-            <div class="messages" id="messages">
-                <div class="msg-box msg-other">
-                    <span class="msg-sender">النظام</span>
-                    جاري تحميل المحادثة...
+        <div class="content-body">
+            <!-- تبويبات الهواتف فقط -->
+            <div class="mobile-tabs" id="mobileTabs">
+                <button class="m-tab active" id="mChatBtn" onclick="toggleMobileView('chat')">💬 الدردشة الحية</button>
+                <button class="m-tab" id="mLessonsBtn" onclick="toggleMobileView('lessons')">📚 الملخصات</button>
+            </div>
+
+            <div class="main-workspace">
+                <!-- قسم الدروس والملخصات -->
+                <div class="lessons-panel" id="lessonsPanel">
+                    <h3 id="sectionTitle">الدردشة العامة</h3>
+                    <div id="lessonsContent">
+                        <p style="color: #94a3b8; font-size: 0.85rem;">مساحة عامة للتعارف وتبادل النظريات والأسئلة بين طلاب الآداب والفلسفة.</p>
+                    </div>
+                </div>
+
+                <!-- قسم الدردشة -->
+                <div class="chat-panel" id="chatPanel">
+                    <div class="messages" id="messages">
+                        <div class="msg-box msg-other">
+                            <span class="msg-sender">النظام</span>
+                            جاري الاتصال...
+                        </div>
+                    </div>
+                    <div class="input-area">
+                        <input type="text" id="userInput" placeholder="اكتب مشاركتك هنا...">
+                        <button id="sendBtn">إرسال</button>
+                    </div>
                 </div>
             </div>
-            <div class="input-area">
-                <input type="text" id="userInput" placeholder="اكتب مشاركتك...">
-                <button id="sendBtn">إرسال</button>
-            </div>
-        </div>
-
-        <!-- واجهة الدروس -->
-        <div class="lessons-view" id="lessonsView">
-            <div id="lessonsContainer"></div>
         </div>
     </div>
-
-    <!-- الشريط السفلي لتغيير المادة -->
-    <nav class="bottom-nav">
-        <button class="nav-item active" onclick="switchMainRoom('general', 'عامة', this)">
-            <span class="icon">💬</span>
-            <span>الدردشة</span>
-        </button>
-        <button class="nav-item" onclick="switchMainRoom('philo', 'فلسفة', this)">
-            <span class="icon">🧠</span>
-            <span>الفلسفة</span>
-        </button>
-        <button class="nav-item" onclick="switchMainRoom('arabic', 'أدب', this)">
-            <span class="icon">📚</span>
-            <span>الأدب</span>
-        </button>
-        <button class="nav-item" onclick="switchMainRoom('history', 'تاريخ/جغرافيا', this)">
-            <span class="icon">🌍</span>
-            <span>إجتماعيات</span>
-        </button>
-    </nav>
 
     <!-- Firebase SDK -->
     <script type="module">
@@ -131,67 +145,87 @@
       const userInput = document.getElementById('userInput');
       const usernameInput = document.getElementById('usernameInput');
       const sendBtn = document.getElementById('sendBtn');
-      const lessonsContainer = document.getElementById('lessonsContainer');
+      const sectionTitle = document.getElementById('sectionTitle');
+      const lessonsContent = document.getElementById('lessonsContent');
 
       let currentRoom = 'general';
       let currentRef = null;
       const myClientId = 'user_' + Math.random().toString(36).substr(2, 9);
 
-      // حفظ الاسم
       usernameInput.value = localStorage.getItem('bac_user_name') || 'طالب';
       usernameInput.addEventListener('input', () => {
           localStorage.setItem('bac_user_name', usernameInput.value.trim());
       });
 
-      // قاعدة بيانات الملخصات
       const lessonsData = {
-          general: `<div class="lesson-card"><h3>مرحباً بك!</h3><p>هذه المساحة مخصصة للحديث الحر والتعارف بين طلاب بكالوريا آداب وفلسفة.</p></div>`,
-          philo: `
-            <div class="lesson-card"><h3>مقالة: الشعور واللاشعور</h3><p>هل الحياة النفسية تقوم كلها على ما هو شعوري فقط؟ (جدل بين المدرسة الكلاسيكية ومدرسة التحليل النفسي).</p></div>
-            <div class="lesson-card"><h3>مقالة: أصل الرياضيات</h3><p>هل النفاذ إلى المفاهيم الرياضية يعود إلى العقل أم التجربة الحسية؟</p></div>
-          `,
-          arabic: `
-            <div class="lesson-card"><h3>القواعد: إعراب إذْ وإذًا</h3><p>ملخص سريع للفرق بين إذ الحينية، الظرفية، والتعليلية مع الأمثلة المعربة.</p></div>
-            <div class="lesson-card"><h3>البلاغة: المجاز المرسل</h3><p>علاقات المجاز المرسل (السببية، المسببية، الجزئية، الكلية) وكيفية استخراجه.</p></div>
-          `,
-          history: `
-            <div class="lesson-card"><h3>تاريخ: معايير تشكل العالم</h3><p>المعايير التاريخية، الاقتصادية، الاجتماعية والعلمية بعد الحرب العالمية الثانية.</p></div>
-            <div class="lesson-card"><h3>جغرافيا: القوى الاقتصادية الكبرى</h3><p>مصطلحات ومفاهيم البترول، العولمة، والتكتلات الاقتصادية.</p></div>
-          `
-      };
-
-      // التبديل بين التبويبات الفرعية (دردشة / دروس)
-      window.switchSubTab = function(type) {
-          document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
-          if(type === 'chat') {
-              document.querySelectorAll('.sub-tab-btn')[0].classList.add('active');
-              document.getElementById('chatView').style.display = 'flex';
-              document.getElementById('lessonsView').style.display = 'none';
-          } else {
-              document.querySelectorAll('.sub-tab-btn')[1].classList.add('active');
-              document.getElementById('chatView').style.display = 'none';
-              document.getElementById('lessonsView').style.display = 'block';
+          general: {
+              title: "💬 الدردشة العامة",
+              content: `<p style="color: #94a3b8; font-size: 0.85rem;">مساحة عامة للتعارف وتبادل النظريات والأسئلة بين طلاب الآداب والفلسفة.</p>`
+          },
+          philo: {
+              title: "🧠 قسم الفلسفة",
+              content: `
+                <div class="lesson-card"><b>مقالة 1:</b> إشكالية الشعور واللاشعور (مخطط جدلي جاهز).</div>
+                <div class="lesson-card"><b>مقالة 2:</b> أصل المفاهيم الرياضية (بين العقل والتجربة).</div>
+              `
+          },
+          arabic: {
+              title: "📚 الأدب العربي",
+              content: `
+                <div class="lesson-card"><b>القواعد:</b> إعراب إذْ، إذًا، وإذن بطريقة مبسطة.</div>
+                <div class="lesson-card"><b>البلاغة:</b> أهم علاقات المجاز المرسل واستخراجه.</div>
+              `
+          },
+          history: {
+              title: "🌍 الاجتماعيات",
+              content: `
+                <div class="lesson-card"><b>تاريخ:</b> معايير تشكل العالم بعد الحرب العالمية الثانية.</div>
+                <div class="lesson-card"><b>جغرافيا:</b> مصطلحات البترول، العولمة والتكتلات.</div>
+              `
           }
       };
 
-      // التبديل بين المواد الرئيسية
-      window.switchMainRoom = function(roomKey, title, btn) {
+      window.switchSection = function(roomKey, btn) {
           currentRoom = roomKey;
-          document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+          document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
 
-          lessonsContainer.innerHTML = lessonsData[roomKey] || '<p>لا توجد دروس حالياً.</p>';
+          const data = lessonsData[roomKey];
+          sectionTitle.innerText = data.title;
+          lessonsContent.innerHTML = data.content;
 
-          // إذا كانت الغرفة عامة نخفي تبويب الدروس
-          if(roomKey === 'general') {
-              document.getElementById('lessonsTabBtn').style.display = 'none';
-              switchSubTab('chat');
-          } else {
-              document.getElementById('lessonsTabBtn').style.display = 'block';
+          // تحكم في تبويبات الهواتف
+          if(window.innerWidth <= 768) {
+              if(roomKey === 'general') {
+                  document.getElementById('mobileTabs').style.display = 'none';
+                  toggleMobileView('chat');
+              } else {
+                  document.getElementById('mobileTabs').style.display = 'flex';
+                  toggleMobileView('chat');
+              }
           }
 
           if (currentRef) off(currentRef);
           listenToRoom(roomKey);
+      };
+
+      window.toggleMobileView = function(view) {
+          const chatPanel = document.getElementById('chatPanel');
+          const lessonsPanel = document.getElementById('lessonsPanel');
+          const mChatBtn = document.getElementById('mChatBtn');
+          const mLessonsBtn = document.getElementById('mLessonsBtn');
+
+          if(view === 'chat') {
+              chatPanel.style.display = 'flex';
+              lessonsPanel.style.display = 'none';
+              mChatBtn.classList.add('active');
+              mLessonsBtn.classList.remove('active');
+          } else {
+              chatPanel.style.display = 'none';
+              lessonsPanel.style.display = 'block';
+              mLessonsBtn.classList.add('active');
+              mChatBtn.classList.remove('active');
+          }
       };
 
       function listenToRoom(room) {
@@ -241,8 +275,8 @@
           if (e.key === 'Enter') sendMessage();
       });
 
-      // تشغيل الغرفة العامة افتراضياً
-      switchMainRoom('general', 'عامة', document.querySelectorAll('.nav-item')[0]);
+      // التشغيل الافتراضي
+      switchSection('general', document.querySelectorAll('.nav-btn')[0]);
     </script>
 </body>
 </html>
