@@ -8,255 +8,197 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 
-    <meta name="theme-color" content="#0b0f19">
+    <meta name="theme-color" content="#0f172a">
     <title>منصة الآداب والفلسفة - B4C</title>
 
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: #111827;
-            --card-sub: #1f2937;
-            --text-color: #f8fafc;
-            --text-sub: #9ca3af;
-            --border-color: #1f2937;
-            --accent-color: #38bdf8;
-        }
-
-        .light-theme {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --card-sub: #f1f5f9;
-            --text-color: #0f172a;
-            --text-sub: #64748b;
-            --border-color: #e2e8f0;
-            --accent-color: #0284c7;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-sub: #334155;
+            --accent: #38bdf8;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
         }
 
         * { 
             box-sizing: border-box; margin: 0; padding: 0; 
             font-family: system-ui, -apple-system, sans-serif;
-            -webkit-user-select: none; -moz-user-select: none; user-select: none;
+            -webkit-user-select: none; user-select: none;
         }
 
-        .msg-text, .lesson-item p, input, textarea {
-            -webkit-user-select: text !important; -moz-user-select: text !important; user-select: text !important;
-        }
+        .selectable { -webkit-user-select: text !important; user-select: text !important; }
 
-        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; }
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* الشاشة الأولى: تسجيل الدخول */
-        .auth-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; text-align: center; }
-        .auth-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 35px 25px; max-width: 400px; width: 100%; display: flex; flex-direction: column; gap: 18px; }
-        .auth-card h2 { color: var(--accent-color); font-size: 1.4rem; }
-        .auth-btn { padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.95rem; background: #fff; color: #111; }
+        /* شاشة الدخول */
+        .auth-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .auth-card { background: var(--surface); border-radius: 20px; padding: 40px 24px; text-align: center; max-width: 380px; width: 100%; border: 1px solid #334155; }
+        .auth-card h1 { font-size: 1.5rem; color: var(--accent); margin-bottom: 8px; }
+        .auth-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; }
+        .auth-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: bold; background: #fff; color: #0f172a; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; font-size: 0.95rem; }
 
+        /* التطبيق الرئيسي */
         #appArea { display: none; flex-direction: column; min-height: 100vh; }
-        
-        /* الهيدر الأنيق والمرتب */
-        header { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.1rem; font-weight: 800; color: var(--accent-color); cursor: pointer; white-space: nowrap; }
-        .header-controls { display: flex; align-items: center; gap: 8px; }
-        .online-count { background: rgba(34, 197, 94, 0.1); color: #22c55e; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(34, 197, 94, 0.2); }
-        .theme-btn { background: var(--card-sub); border: 1px solid var(--border-color); color: var(--text-color); padding: 5px 8px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
-        .user-avatar-header { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--accent-color); object-fit: cover; }
-        .btn-logout { background: #ef4444; color: #fff; padding: 5px 10px; border-radius: 6px; border: none; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
 
-        .container { max-width: 1200px; margin: 0 auto; width: 100%; padding: 15px; flex: 1; display: flex; flex-direction: column; }
+        /* الهيدر الأنيق البسيط */
+        header { background: var(--surface); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 50; }
+        .brand { font-size: 1.1rem; font-weight: 800; color: var(--accent); }
+        .user-nav { display: flex; align-items: center; gap: 12px; }
+        .user-avatar { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+        .logout-btn { background: rgba(239, 68, 68, 0.15); color: #f87171; border: none; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
 
-        /* بطاقات المواد */
-        .subjects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 15px; }
-        .subject-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 10px; }
-        .subject-card .icon { font-size: 2.2rem; }
-        .subject-card h3 { font-size: 1.1rem; color: var(--text-color); }
-        .subject-card p { font-size: 0.85rem; color: var(--text-sub); line-height: 1.4; }
-        .subject-card .badge { align-self: flex-start; background: rgba(56, 189, 248, 0.1); color: var(--accent-color); padding: 3px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: bold; }
+        /* محتوى الشاشات */
+        main { flex: 1; padding: 20px; max-width: 900px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; }
 
-        /* صفحة المادة المستقلة */
-        .subject-page { display: none; flex-direction: column; gap: 12px; flex: 1; }
-        .subject-top-bar { display: flex; justify-content: space-between; align-items: center; }
-        .back-btn { background: var(--card-sub); color: var(--accent-color); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.82rem; }
+        /* صفحة المواد */
+        .page-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 6px; }
+        .page-desc { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; }
 
-        /* تبويبات التنقل الخاصة بالمادة (دروس / شات) */
-        .view-tabs { display: flex; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 4px; gap: 4px; }
-        .v-tab { flex: 1; padding: 8px; text-align: center; background: none; border: none; color: var(--text-sub); font-weight: bold; font-size: 0.85rem; cursor: pointer; border-radius: 8px; }
-        .v-tab.active { background: var(--accent-color); color: #000; }
+        .cards-grid { display: flex; flex-direction: column; gap: 14px; }
+        .card { background: var(--surface); border: 1px solid #334155; border-radius: 16px; padding: 20px; cursor: pointer; transition: transform 0.15s, border-color 0.15s; display: flex; align-items: center; justify-content: space-between; }
+        .card:active { transform: scale(0.98); }
+        .card-info h3 { font-size: 1.1rem; margin-bottom: 4px; }
+        .card-info p { font-size: 0.82rem; color: var(--text-muted); }
+        .card-tag { background: rgba(56, 189, 248, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
 
-        /* الأقسام المستقلة */
-        .view-content { flex: 1; display: flex; flex-direction: column; }
+        /* صفحة تفاصيل المادة */
+        .subject-view { display: none; flex-direction: column; flex: 1; gap: 16px; }
+        .top-nav { display: flex; align-items: center; justify-content: space-between; }
+        .back-link { color: var(--accent); background: none; border: none; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
 
-        /* 1. قسم الملخصات */
-        .lessons-view { display: flex; flex-direction: column; gap: 12px; }
-        .search-box { width: 100%; padding: 10px 14px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-color); outline: none; font-size: 0.88rem; }
-        .action-bar-lessons { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-        .contrib-btn { background: #2563eb; color: #fff; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
-        
-        .lesson-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; border-right: 4px solid var(--accent-color); }
-        .lesson-item h4 { font-size: 0.95rem; color: var(--text-color); margin-bottom: 4px; }
-        .lesson-item p { font-size: 0.85rem; color: var(--text-sub); line-height: 1.4; }
+        /* الشات النظيف المصمم كصفحة كاملة */
+        .chat-container { background: var(--surface); border: 1px solid #334155; border-radius: 16px; height: calc(100vh - 160px); display: flex; flex-direction: column; overflow: hidden; }
+        .chat-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
 
-        /* 2. قسم الشات النقية */
-        .chat-view { display: none; flex-direction: column; flex: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; height: calc(100vh - 180px); position: relative; }
-        .chat-messages { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        
-        .msg-row { display: flex; gap: 8px; align-items: flex-start; max-width: 88%; }
-        .msg-row.msg-me { align-self: flex-end; flex-direction: row-reverse; }
-        .msg-row.msg-other { align-self: flex-start; }
+        .msg-group { display: flex; gap: 10px; align-items: flex-start; max-width: 85%; }
+        .msg-group.me { align-self: flex-end; flex-direction: row-reverse; }
+        .msg-group.other { align-self: flex-start; }
 
-        .msg-user-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-        
-        .msg-box { padding: 8px 12px; border-radius: 12px; font-size: 0.85rem; word-break: break-word; }
-        .msg-other .msg-box { background: var(--card-sub); color: var(--text-color); border-bottom-right-radius: 2px; }
-        .msg-me .msg-box { background: #2563eb; color: #fff; border-bottom-left-radius: 2px; }
-        
-        .msg-sender { font-size: 0.7rem; font-weight: bold; color: var(--accent-color); margin-bottom: 2px; display: block; }
-        .msg-me .msg-sender { color: #bfdbfe; }
-        
-        .reply-quote { background: rgba(0,0,0,0.25); border-right: 3px solid var(--accent-color); padding: 4px 6px; border-radius: 4px; font-size: 0.72rem; margin-bottom: 4px; opacity: 0.9; }
-        
-        .reactions-container { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
-        .reaction-badge { background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 8px; font-size: 0.7rem; }
+        .msg-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; }
+        .msg-content { padding: 10px 14px; border-radius: 14px; font-size: 0.9rem; line-height: 1.4; }
+        .other .msg-content { background: var(--surface-sub); color: #fff; border-top-right-radius: 2px; }
+        .me .msg-content { background: #2563eb; color: #fff; border-top-left-radius: 2px; }
 
-        /* نافذة التفاعلات والإبلاغ (Popup) */
-        .reaction-picker-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .reaction-picker { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 10px 16px; display: flex; gap: 10px; align-items: center; }
-        .picker-emoji { font-size: 1.5rem; cursor: pointer; }
-        .report-btn { color: #ef4444; font-size: 0.8rem; font-weight: bold; cursor: pointer; border-right: 1px solid var(--border-color); padding-right: 8px; margin-right: 4px; }
+        .msg-author { font-size: 0.72rem; color: var(--accent); font-weight: bold; margin-bottom: 3px; display: block; }
+        .me .msg-author { color: #bfdbfe; }
 
-        .reply-preview { background: var(--card-sub); padding: 6px 12px; border-top: 1px solid var(--border-color); font-size: 0.75rem; display: none; justify-content: space-between; align-items: center; color: var(--accent-color); }
-        .chat-input { padding: 10px; border-top: 1px solid var(--border-color); display: flex; gap: 6px; }
-        .chat-input input { flex: 1; padding: 8px 12px; background: var(--card-sub); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 8px; outline: none; font-size: 0.85rem; }
-        .chat-input button { background: #2563eb; color: #fff; border: none; padding: 0 14px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
+        .chat-bar { padding: 12px; background: #0f172a; border-top: 1px solid #334155; display: flex; gap: 8px; }
+        .chat-bar input { flex: 1; background: var(--surface); border: 1px solid #334155; color: #fff; padding: 10px 14px; border-radius: 10px; outline: none; font-size: 0.9rem; }
+        .chat-bar button { background: #2563eb; color: #fff; border: none; padding: 0 16px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+        /* نافذة التفاعلات البسيطة */
+        .picker-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 100; }
+        .picker-box { background: var(--surface); border: 1px solid #334155; border-radius: 30px; padding: 10px 18px; display: flex; gap: 14px; font-size: 1.5rem; }
+        .picker-box span { cursor: pointer; }
+
+        /* قسم الدروس النقية */
+        .lessons-list { display: flex; flex-direction: column; gap: 10px; }
+        .lesson-card { background: var(--surface); border: 1px solid #334155; border-radius: 12px; padding: 14px; }
+        .lesson-card h4 { font-size: 0.95rem; color: var(--accent); margin-bottom: 4px; }
+        .lesson-card p { font-size: 0.85rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
-    <!-- نافذة التفاعلات والإبلاغ -->
-    <div class="reaction-picker-overlay" id="reactionOverlay" onclick="closePicker()">
-        <div class="reaction-picker" onclick="event.stopPropagation()">
-            <span class="report-btn" onclick="reportMessage()">🚩 إبلاغ</span>
-            <span class="picker-emoji" onclick="selectReaction('😂')">😂</span>
-            <span class="picker-emoji" onclick="selectReaction('👍')">👍</span>
-            <span class="picker-emoji" onclick="selectReaction('😶')">😶</span>
-            <span class="picker-emoji" onclick="selectReaction('🧐')">🧐</span>
-            <span class="picker-emoji" onclick="selectReaction('😢')">😢</span>
-            <span class="picker-emoji" onclick="selectReaction('⁉️')">⁉️</span>
-            <span class="picker-emoji" style="font-size: 1rem; opacity:0.7;" onclick="triggerReplyFromPicker()">↩️</span>
+    <!-- التفاعلات -->
+    <div class="picker-modal" id="pickerModal" onclick="closePicker()">
+        <div class="picker-box" onclick="event.stopPropagation()">
+            <span onclick="addEmoji('👍')">👍</span>
+            <span onclick="addEmoji('😂')">😂</span>
+            <span onclick="addEmoji('😮')">😮</span>
+            <span onclick="addEmoji('😢')">😢</span>
+            <span onclick="addEmoji('🚩')">🚩</span>
         </div>
     </div>
 
     <!-- تسجيل الدخول -->
     <div class="auth-screen" id="authScreen">
         <div class="auth-card">
-            <h2>📜 منصة الآداب والفلسفة</h2>
-            <p style="color: var(--text-sub); font-size: 0.88rem;">مرحباً بك! سجل دخولك للمناقشة وتصفح الملخصات.</p>
+            <h1>منصة B4C</h1>
+            <p>شعبة الآداب والفلسفة</p>
             <button class="auth-btn" id="googleLoginBtn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="Google">
-                الدخول عبر حساب Google
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="">
+                متابعة باستخدام Google
             </button>
         </div>
     </div>
 
-    <!-- التطبيق الرئيسي -->
+    <!-- التطبيق -->
     <div id="appArea">
         <header>
-            <div class="logo" onclick="showHomePage()">📜 B4C آداب وفلسفة</div>
-            <div class="header-controls">
-                <span class="online-count">🟢 <span id="onlineCounter">1</span></span>
-                <button class="theme-btn" onclick="toggleTheme()">☀️/🌙</button>
-                <img id="userHeaderAvatar" class="user-avatar-header" src="" alt="حسابي">
-                <button class="btn-logout" id="logoutBtn">خروج</button>
+            <div class="brand" onclick="showHome()">📜 B4C آداب وفلسفة</div>
+            <div class="user-nav">
+                <img id="userHeaderAvatar" class="user-avatar" src="" alt="">
+                <button class="logout-btn" id="logoutBtn">خروج</button>
             </div>
         </header>
 
-        <div class="container">
+        <main>
             <!-- الصفحة الرئيسية -->
             <div id="homePage">
-                <h2 style="font-size: 1.2rem; margin-bottom: 4px;">المواد المقررة للبكالوريا</h2>
-                <p style="color: var(--text-sub); font-size: 0.85rem; margin-bottom: 14px;">اختر المادة لتصفح الدروس والمناقشة المباشرة.</p>
+                <div class="page-title">المواد المقررة</div>
+                <div class="page-desc">اختر المادة لتصفح الملخصات أو المناقشة المباشرة.</div>
 
-                <div class="subjects-grid">
-                    <div class="subject-card" onclick="openSubject('philo', 'مادة الفلسفة', '🧠')">
-                        <span class="badge">معامل 6</span>
-                        <div class="icon">🧠</div>
-                        <h3>مادة الفلسفة</h3>
-                        <p>المقالات الجدلية، الاستقصاء بالوضع، والتحليلات النصية.</p>
+                <div class="cards-grid">
+                    <div class="card" onclick="openSubject('philo', 'الفلسفة')">
+                        <div class="card-info">
+                            <h3>🧠 مادة الفلسفة</h3>
+                            <p>المقالات الجدلية والاستقصائية</p>
+                        </div>
+                        <span class="card-tag">معامل 6</span>
                     </div>
 
-                    <div class="subject-card" onclick="openSubject('arabic', 'اللغة العربية', '📚')">
-                        <span class="badge">معامل 5</span>
-                        <div class="icon">📚</div>
-                        <h3>اللغة العربية والآداب</h3>
-                        <p>قواعد اللغة، إعراب الجمل، والبلاغة المقررة.</p>
+                    <div class="card" onclick="openSubject('arabic', 'اللغة العربية')">
+                        <div class="card-info">
+                            <h3>📚 اللغة العربية</h3>
+                            <p>القواعد والظواهر البلاغية</p>
+                        </div>
+                        <span class="card-tag">معامل 5</span>
                     </div>
 
-                    <div class="subject-card" onclick="openSubject('history', 'التاريخ والجغرافيا', '🌍')">
-                        <span class="badge">معامل 4</span>
-                        <div class="icon">🌍</div>
-                        <h3>التاريخ والجغرافيا</h3>
-                        <p>المصطلحات، التواريخ، ومسائل الخرائط والتكتلات.</p>
+                    <div class="card" onclick="openSubject('history', 'التاريخ والجغرافيا')">
+                        <div class="card-info">
+                            <h3>🌍 التاريخ والجغرافيا</h3>
+                            <p>المصطلحات والتواريخ المقررة</p>
+                        </div>
+                        <span class="card-tag">معامل 4</span>
                     </div>
 
-                    <div class="subject-card" onclick="openSubject('general', 'المنتدى العام', '💬')">
-                        <span class="badge">فضاء التعارف</span>
-                        <div class="icon">💬</div>
-                        <h3>المنتدى العام</h3>
-                        <p>مساحة خاصة للتواصل والاستفسارات عامة بين الطلاب.</p>
+                    <div class="card" onclick="openSubject('general', 'المنتدى العام')">
+                        <div class="card-info">
+                            <h3>💬 المنتدى العام</h3>
+                            <p>مساحة خاصة للنقاش الحر</p>
+                        </div>
+                        <span class="card-tag">عام</span>
                     </div>
                 </div>
             </div>
 
-            <!-- صفحة المادة النظيفة -->
-            <div id="subjectPage" class="subject-page">
-                <div class="subject-top-bar">
-                    <button class="back-btn" onclick="showHomePage()">➡️ المواد</button>
-                    <h3 id="subjectTitle" style="color: var(--accent-color); font-size: 1.05rem;">اسم المادة</h3>
+            <!-- صفحة المادة -->
+            <div id="subjectView" class="subject-view">
+                <div class="top-nav">
+                    <button class="back-link" onclick="showHome()">← العودة للمواد</button>
+                    <div class="page-title" id="subjectTitle">الفلسفة</div>
                 </div>
 
-                <!-- تبويبات الفصل الكلي (دروس VS شات) -->
-                <div class="view-tabs">
-                    <button class="v-tab active" id="tabLessonsBtn" onclick="switchView('lessons')">📚 الدروس والملخصات</button>
-                    <button class="v-tab" id="tabChatBtn" onclick="switchView('chat')">💬 المناقشة الحية</button>
-                </div>
-
-                <div class="view-content">
-                    <!-- 1. قسم الملخصات المستقل -->
-                    <div class="lessons-view" id="lessonsView">
-                        <input type="text" id="lessonSearch" class="search-box" placeholder="🔍 ابحث عن درس أو مقالة..." oninput="filterLessons()">
-                        <div class="action-bar-lessons">
-                            <span style="font-size:0.85rem; font-weight:bold;">قائمة المراجعة:</span>
-                            <button class="contrib-btn" onclick="suggestLesson()">➕ شارك ملخصك</button>
-                        </div>
-                        <div id="materialsContent"></div>
-                        
-                        <!-- قسم ملخصات الطلاب المقترحة -->
-                        <h4 style="color: var(--accent-color); margin-top: 15px; font-size:0.9rem;">📝 مشاركات وملخصات الطلاب:</h4>
-                        <div id="studentSubmissions"></div>
-                    </div>
-
-                    <!-- 2. قسم الشات المستقل الشامل -->
-                    <div class="chat-view" id="chatView">
-                        <div class="chat-messages" id="chatMessages"></div>
-                        
-                        <div class="reply-preview" id="replyPreview">
-                            <span id="replyPreviewText">جاري الرد...</span>
-                            <span style="cursor:pointer;" onclick="cancelReply()">✕</span>
-                        </div>
-
-                        <div class="chat-input">
-                            <input type="text" id="userInput" placeholder="اكتب مشاركتك هنا...">
-                            <button id="sendBtn">إرسال</button>
-                        </div>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-bar">
+                        <input type="text" id="userInput" class="selectable" placeholder="اكتب رسالتك...">
+                        <button id="sendBtn">إرسال</button>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <!-- Firebase SDK -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
       import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut, getRedirectResult } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-      import { getDatabase, ref, push, onValue, off, onDisconnect, set, update } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+      import { getDatabase, ref, push, onValue, off, set } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyCi8tBwbrQ2N3HPK266BnyLBbNIBZ1ggsg",
@@ -281,24 +223,21 @@
       const userHeaderAvatar = document.getElementById('userHeaderAvatar');
 
       let currentUser = null;
-      let activeTargetMsgId = null;
-      let activeTargetSender = null;
-      let activeTargetText = null;
+      let currentRoom = '';
+      let currentRef = null;
+      let activeMsgId = null;
 
       googleLoginBtn.addEventListener('click', () => signInWithRedirect(auth, provider));
       logoutBtn.addEventListener('click', () => signOut(auth));
 
-      getRedirectResult(auth).catch((error) => {
-          if (error.code && error.code !== 'auth/redirect-cancelled-by-user') alert("خطأ: " + error.message);
-      });
+      getRedirectResult(auth).catch(() => {});
 
       onAuthStateChanged(auth, (user) => {
           if (user) {
               currentUser = user;
-              userHeaderAvatar.src = user.photoURL || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
+              userHeaderAvatar.src = user.photoURL || "";
               authScreen.style.display = 'none';
               appArea.style.display = 'flex';
-              setupPresence(user.uid);
           } else {
               currentUser = null;
               authScreen.style.display = 'flex';
@@ -306,266 +245,98 @@
           }
       });
 
-      function setupPresence(uid) {
-          const presenceRef = ref(db, 'presence/' + uid);
-          set(presenceRef, true);
-          onDisconnect(presenceRef).remove();
-          onValue(ref(db, 'presence'), (snap) => {
-              const count = snap.val() ? Object.keys(snap.val()).length : 1;
-              document.getElementById('onlineCounter').innerText = count;
-          });
-      }
+      window.showHome = function() {
+          document.getElementById('homePage').style.display = 'block';
+          document.getElementById('subjectView').style.display = 'none';
+          if (currentRef) off(currentRef);
+      };
 
-      window.toggleTheme = function() { document.body.classList.toggle('light-theme'); };
+      window.openSubject = function(key, title) {
+          currentRoom = key;
+          document.getElementById('homePage').style.display = 'none';
+          document.getElementById('subjectView').style.display = 'flex';
+          document.getElementById('subjectTitle').innerText = title;
+
+          if (currentRef) off(currentRef);
+          listenRoom(key);
+      };
 
       const chatMessages = document.getElementById('chatMessages');
       const userInput = document.getElementById('userInput');
       const sendBtn = document.getElementById('sendBtn');
-      const materialsContent = document.getElementById('materialsContent');
-      const studentSubmissions = document.getElementById('studentSubmissions');
-      const subjectTitle = document.getElementById('subjectTitle');
-      const replyPreview = document.getElementById('replyPreview');
-      const replyPreviewText = document.getElementById('replyPreviewText');
-      const reactionOverlay = document.getElementById('reactionOverlay');
 
-      let currentRoom = '';
-      let currentRef = null;
-      let replyTarget = null;
-
-      const materialsData = {
-          philo: [
-              { title: "1. مقالة الشعور واللاشعور (جدلية)", desc: "الموقف الأول: ديكارت (الشعور). الموقف الثاني: فرويد (اللاشعور)." },
-              { title: "2. مقالة الرياضيات بين العقل والتجربة", desc: "أصل المفاهيم الرياضية وطبيعة البرهان الرياضي." }
-          ],
-          arabic: [
-              { title: "1. القواعد: الأحكام النحوية لـ (إذْ، إذًا، إذن)", desc: "شرح الفرق بين إذ الظرفية والتعليلية والفجائية." },
-              { title: "2. البلاغة: المجاز المرسل وعلاقاته", desc: "استخراج الصور البيانية ومعرفة علاقاتها." }
-          ],
-          history: [
-              { title: "1. تاريخ: بروز الصراع وتشكل العالم", desc: "معايير تشكل العالم السياسية والعسكرية بعد 1945." },
-              { title: "2. جغرافيا: مصطلحات التكتلات", desc: "شرح البترول، العولمة والتكتلات الاقتصادية." }
-          ],
-          general: [
-              { title: "تعليمات وقوانين المنتدى", desc: "احترام أفكار زملائك والتركيز على المراجعة البناءة." }
-          ]
-      };
-
-      let activeLessons = [];
-
-      window.showHomePage = function() {
-          document.getElementById('homePage').style.display = 'block';
-          document.getElementById('subjectPage').style.display = 'none';
-          if (currentRef) off(currentRef);
-      };
-
-      window.openSubject = function(key, titleName, icon) {
-          currentRoom = key;
-          document.getElementById('homePage').style.display = 'none';
-          document.getElementById('subjectPage').style.display = 'flex';
-          
-          subjectTitle.innerText = icon + ' ' + titleName;
-          activeLessons = materialsData[key] || [];
-          renderLessons(activeLessons);
-          listenToSubmissions(key);
-
-          switchView('lessons');
-
-          if (currentRef) off(currentRef);
-          listenToRoom(key);
-      };
-
-      window.switchView = function(view) {
-          if(view === 'lessons') {
-              document.getElementById('lessonsView').style.display = 'flex';
-              document.getElementById('chatView').style.display = 'none';
-              document.getElementById('tabLessonsBtn').classList.add('active');
-              document.getElementById('tabChatBtn').classList.remove('active');
-          } else {
-              document.getElementById('lessonsView').style.display = 'none';
-              document.getElementById('chatView').style.display = 'flex';
-              document.getElementById('tabChatBtn').classList.add('active');
-              document.getElementById('tabLessonsBtn').classList.remove('active');
-          }
-      };
-
-      function renderLessons(list) {
-          materialsContent.innerHTML = '';
-          if(list.length === 0) {
-              materialsContent.innerHTML = '<p style="color: var(--text-sub);">لا توجد نتائج.</p>';
-              return;
-          }
-          list.forEach(item => {
-              const div = document.createElement('div');
-              div.className = 'lesson-item';
-              div.innerHTML = `<h4>${item.title}</h4><p>${item.desc}</p>`;
-              materialsContent.appendChild(div);
-          });
-      }
-
-      window.filterLessons = function() {
-          const query = document.getElementById('lessonSearch').value.toLowerCase();
-          const filtered = activeLessons.filter(l => l.title.toLowerCase().includes(query) || l.desc.toLowerCase().includes(query));
-          renderLessons(filtered);
-      };
-
-      // مشاركة ورؤية ملخصات الطلاب
-      window.suggestLesson = function() {
-          const title = prompt("أدخل عنوان الملخص أو المقالة:");
-          if(!title) return;
-          const link = prompt("أدخل رابط الملخص أو الفكرة:");
-          if(title && link && currentUser) {
-              push(ref(db, `submissions/${currentRoom}`), {
-                  sender: currentUser.displayName || "طالب",
-                  title: title,
-                  link: link,
-                  timestamp: Date.now()
-              });
-              alert("تمت إضافة ملخصك بنجاح وسيطهر للجميع فوراً!");
-          }
-      };
-
-      function listenToSubmissions(room) {
-          onValue(ref(db, `submissions/${room}`), (snap) => {
-              studentSubmissions.innerHTML = '';
-              const data = snap.val();
-              if(data) {
-                  Object.values(data).forEach(sub => {
-                      const div = document.createElement('div');
-                      div.className = 'lesson-item';
-                      div.style.borderColor = '#22c55e';
-                      div.innerHTML = `<h4>${sub.title} <span style="font-size:0.75rem; color:var(--accent-color);">[بواسطة: ${sub.sender}]</span></h4><p><a href="${sub.link}" target="_blank" style="color:var(--accent-color);">🔗 فتح الملخص المقترح</a></p>`;
-                      studentSubmissions.appendChild(div);
-                  });
-              } else {
-                  studentSubmissions.innerHTML = '<p style="font-size:0.8rem; color:var(--text-sub);">لا توجد ملخصات مقترحة بعد.</p>';
-              }
-          });
-      }
-
-      function listenToRoom(room) {
+      function listenRoom(room) {
           currentRef = ref(db, 'rooms/' + room);
-          onValue(currentRef, (snapshot) => {
+          onValue(currentRef, (snap) => {
               chatMessages.innerHTML = '';
-              const data = snapshot.val();
+              const data = snap.val();
               if (data) {
-                  Object.entries(data).forEach(([msgId, msg]) => {
+                  Object.entries(data).forEach(([id, msg]) => {
                       const isMe = currentUser && msg.uid === currentUser.uid;
-                      const row = document.createElement('div');
-                      row.className = `msg-row ${isMe ? 'msg-me' : 'msg-other'}`;
-                      
-                      let replyHTML = msg.replyTo ? `<div class="reply-quote">رد على: ${msg.replyTo}</div>` : '';
-                      
-                      let reactionsHTML = '';
-                      if(msg.reactions) {
-                          const counts = {};
-                          Object.values(msg.reactions).forEach(emoji => { counts[emoji] = (counts[emoji] || 0) + 1; });
-                          reactionsHTML = '<div class="reactions-container">';
-                          Object.entries(counts).forEach(([emoji, count]) => { reactionsHTML += `<span class="reaction-badge">${emoji} ${count}</span>`; });
-                          reactionsHTML += '</div>';
-                      }
+                      const div = document.createElement('div');
+                      div.className = `msg-group ${isMe ? 'me' : 'other'}`;
 
-                      const userAvatarSrc = msg.userPhoto || "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg";
+                      let reactionsText = msg.reaction ? ` <span style="font-size:0.75rem;">${msg.reaction}</span>` : '';
 
-                      row.innerHTML = `
-                          <img class="msg-user-avatar" src="${userAvatarSrc}" alt="">
-                          <div class="msg-box">
-                              ${replyHTML}
-                              <span class="msg-sender">${isMe ? 'أنت' : (msg.sender || 'طالب')}</span>
-                              <span class="msg-text">${msg.text}</span>
-                              ${reactionsHTML}
+                      div.innerHTML = `
+                          <img class="msg-avatar" src="${msg.photo || 'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'}" alt="">
+                          <div class="msg-content selectable">
+                              <span class="msg-author">${isMe ? 'أنت' : msg.sender}</span>
+                              ${msg.text} ${reactionsText}
                           </div>
                       `;
 
-                      // حل مشكلة الضغط المطول مع منع التفعيل أثناء السحب (Scroll protection)
-                      let pressTimer;
-                      let isScrolling = false;
-
-                      row.addEventListener('touchstart', () => {
-                          isScrolling = false;
-                          pressTimer = setTimeout(() => {
-                              if (!isScrolling) openPicker(msgId, msg.sender || 'طالب', msg.text);
-                          }, 500);
+                      let timer;
+                      div.addEventListener('touchstart', () => {
+                          timer = setTimeout(() => openPicker(id), 500);
+                      });
+                      div.addEventListener('touchend', () => clearTimeout(timer));
+                      div.addEventListener('contextmenu', (e) => {
+                          e.preventDefault();
+                          openPicker(id);
                       });
 
-                      row.addEventListener('touchmove', () => { isScrolling = true; clearTimeout(pressTimer); });
-                      row.addEventListener('touchend', () => clearTimeout(pressTimer));
-
-                      chatMessages.appendChild(row);
+                      chatMessages.appendChild(div);
                   });
               } else {
-                  chatMessages.innerHTML = '<div class="msg-box msg-other"><span class="msg-sender">النظام</span>لا توجد مناقشات بعد!</div>';
+                  chatMessages.innerHTML = '<div style="text-align:center; color:var(--text-muted); margin-top:20px; font-size:0.85rem;">لا توجد رسائل بعد</div>';
               }
               chatMessages.scrollTop = chatMessages.scrollHeight;
           });
       }
 
-      window.openPicker = function(msgId, sender, text) {
-          activeTargetMsgId = msgId;
-          activeTargetSender = sender;
-          activeTargetText = text;
-          reactionOverlay.style.display = 'flex';
+      window.openPicker = function(id) {
+          activeMsgId = id;
+          document.getElementById('pickerModal').style.display = 'flex';
       };
 
-      window.closePicker = function() { reactionOverlay.style.display = 'none'; };
-
-      window.selectReaction = function(emoji) {
-          if (!currentUser || !activeTargetMsgId) return;
-          const reactionRef = ref(db, `rooms/${currentRoom}/${activeTargetMsgId}/reactions/${currentUser.uid}`);
-          onValue(reactionRef, (snap) => {
-              if (snap.val() === emoji) set(reactionRef, null);
-              else set(reactionRef, emoji);
-          }, { onlyOnce: true });
-          closePicker();
+      window.closePicker = function() {
+          document.getElementById('pickerModal').style.display = 'none';
       };
 
-      window.reportMessage = function() {
-          if (activeTargetMsgId && currentUser) {
-              push(ref(db, 'reports'), {
-                  reporter: currentUser.displayName,
-                  msgId: activeTargetMsgId,
-                  sender: activeTargetSender,
-                  text: activeTargetText,
-                  timestamp: Date.now()
-              });
-              alert("تم إرسال بلاغك للإدارة، شكراً لمساعدتك في حماية المنصة.");
+      window.addEmoji = function(emoji) {
+          if (activeMsgId && currentRoom) {
+              set(ref(db, `rooms/${currentRoom}/${activeMsgId}/reaction`), emoji);
           }
           closePicker();
       };
 
-      window.triggerReplyFromPicker = function() {
-          if (activeTargetSender && activeTargetText) setReply(activeTargetSender, activeTargetText);
-          closePicker();
-      };
-
-      window.setReply = function(sender, text) {
-          replyTarget = `${sender}: ${text.substring(0, 20)}...`;
-          replyPreviewText.innerText = `رد على (${sender}): ${text.substring(0, 25)}...`;
-          replyPreview.style.display = 'flex';
-      };
-
-      window.cancelReply = function() {
-          replyTarget = null;
-          replyPreview.style.display = 'none';
-      };
-
-      function sendMessage() {
+      function sendMsg() {
           const text = userInput.value.trim();
-          if (text !== '' && currentUser) {
+          if (text && currentUser) {
               push(ref(db, 'rooms/' + currentRoom), {
                   sender: currentUser.displayName || "طالب",
-                  userPhoto: currentUser.photoURL || "",
+                  photo: currentUser.photoURL || "",
                   uid: currentUser.uid,
                   text: text,
-                  replyTo: replyTarget,
                   timestamp: Date.now()
               });
               userInput.value = '';
-              cancelReply();
           }
       }
 
-      sendBtn.addEventListener('click', sendMessage);
-      userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+      sendBtn.addEventListener('click', sendMsg);
+      userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMsg(); });
     </script>
 </body>
 </html>
